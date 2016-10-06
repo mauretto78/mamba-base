@@ -4,7 +4,6 @@
     "keywords": ["silex", "microframework"],
     "license": "MIT",
     "version": "1.0.0",
-    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Mauro Cassani",
@@ -36,6 +35,12 @@
     "autoload": {
         "psr-4": {
             "Mamba\\Base\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
         }
     }
 }
