@@ -1,0 +1,40 @@
+{
+    "name": "mamba/base",
+    "description": "Mamba Framework Base Parts",
+    "keywords": ["silex", "microframework"],
+    "license": "MIT",
+    "version": "1.0.0",
+    "authors": [
+        {
+            "name": "Mauro Cassani",
+            "email": "assistenza@easy-grafica.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.9",
+        "guzzlehttp/guzzle": "^6.2",
+        "knplabs/console-service-provider": "^2.0",
+        "monolog/monolog": "^1.21",
+        "silex/silex": "~2.0",
+        "silex/web-profiler": "^2.0",
+        "symfony/asset": "^3.1",
+        "symfony/form": "^3.1",
+        "symfony/validator": "^3.1",
+        "symfony/translation": "^3.1",
+        "symfony/twig-bridge": "^3.1",
+        "symfony/yaml": "^3.1",
+        "symfony/security-csrf": "^3.1",
+        "symfony/monolog-bridge": "^3.1",
+        "twig/twig": "^1.24",
+        "twig/extensions": "^1.3",
+        "symfony/config": "^3.1",
+        "swiftmailer/swiftmailer": "^5.4",
+        "doctrine/dbal": "~2.2",
+        "dflydev/doctrine-orm-service-provider": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mamba\\Base\\": "src/"
+        }
+    }
+}
