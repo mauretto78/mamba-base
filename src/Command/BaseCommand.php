@@ -19,7 +19,7 @@ abstract class BaseCommand extends Command
     /**
      * @var Application
      */
-    private $app;
+    protected $app;
 
     /**
      * BaseCommand constructor.
