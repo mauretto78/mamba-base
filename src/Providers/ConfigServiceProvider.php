@@ -11,7 +11,6 @@
 
 namespace Mamba\Base\Providers;
 
-use App\Application;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Symfony\Component\Yaml\Yaml;
@@ -22,39 +21,6 @@ use Symfony\Component\Yaml\Yaml;
 class ConfigServiceProvider implements ServiceProviderInterface
 {
     /**
-     * The config directory.
-     *
-     * @var string
-     */
-    private $baseDir;
-
-    /**
-     * The yml filename to parse.
-     *
-     * @var array
-     */
-    private $configFiles;
-
-    /**
-     * @var bool
-     */
-    private $debug;
-
-    /**
-     * ConfigProvider constructor.
-     *
-     * @param string $baseDir
-     * @param array  $configFiles
-     * @param bool   $debug
-     */
-    public function __construct($baseDir, array $configFiles, $debug = true)
-    {
-        $this->baseDir = $baseDir;
-        $this->configFiles = $configFiles;
-        $this->debug = $debug;
-    }
-
-    /**
      * Register this provider.
      *
      * @param Container $app
@@ -63,12 +29,15 @@ class ConfigServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $app)
     {
-        $cacheFile = $this->getCacheFilePath($app);
+        $cacheFile = $app['CacheFilePath'];
+        $baseDir = $app['baseDir'];
+        $configFiles = $app['configFiles'];
+        $debug = $app['$debug'];
 
-        if ($this->debug || !file_exists($cacheFile)) {
+        if ($debug || !file_exists($cacheFile)) {
             $configArray = [];
-            foreach ($this->configFiles as $filename) {
-                $pathFile = $this->baseDir.'/'.$filename;
+            foreach ($configFiles as $filename) {
+                $pathFile = $baseDir.'/'.$filename;
                 if (!file_exists($pathFile)) {
                     throw new \RuntimeException(sprintf('The file "%s" is not found', $pathFile));
                 } elseif (!is_readable($pathFile)) {
@@ -89,15 +58,5 @@ class ConfigServiceProvider implements ServiceProviderInterface
         }
 
         $app['config'] = $config;
-    }
-
-    /**
-     * @param Application $app
-     *
-     * @return string
-     */
-    private function getCacheFilePath(Application $app)
-    {
-        return $app->getCacheDir().'/config.cache';
     }
 }
