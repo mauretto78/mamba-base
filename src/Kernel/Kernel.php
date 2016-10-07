@@ -14,8 +14,9 @@ namespace Mamba\Base\Kernel;
 use Silex\Application;
 use Silex\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Mamba\Base\Contracts\KernelInterface;
 
-class Kernel extends Application implements KernelInterface
+abstract class Kernel extends Application implements KernelInterface
 {
     /**
      * @var string

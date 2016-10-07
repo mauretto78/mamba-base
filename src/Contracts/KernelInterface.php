@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Mamba\Base\Kernel;
+namespace Mamba\Base\Contracts;
 
 /**
  * Interface KernelInterface.

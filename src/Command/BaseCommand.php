@@ -9,12 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Mamba\Base\Type;
+namespace Mamba\Base\Command;
 
+use Mamba\Base\Contracts\CommandInterface;
 use Pimple\Container;
-use Symfony\Component\Form\FormFactory;
+use Knp\Command\Command;
 
-abstract class AbstractType
+class BaseCommand extends Command implements CommandInterface
 {
     /**
      * @var Container
@@ -22,23 +23,13 @@ abstract class AbstractType
     protected $app;
 
     /**
-     * @var FormFactory
-     */
-    protected $factory;
-
-    /**
-     * @var array
-     */
-    protected $errors;
-
-    /**
-     * AbstractType constructor.
-     *
+     * BaseCommand constructor.
      * @param Container $app
      */
     public function __construct(Container $app)
     {
+        parent::__construct();
+
         $this->app = $app;
-        $this->factory = $this->app['form.factory'];
     }
 }

@@ -9,11 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Mamba\Base\Type\Contracts;
+namespace Mamba\Base\Contracts;
 
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormView;
 
+/**
+ * Interface TypeInterface.
+ *
+ * @author Mauro Cassani
+ */
 interface TypeInterface
 {
     /**
