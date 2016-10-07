@@ -29,34 +29,41 @@ class ConfigServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $app)
     {
-        $cacheFile = $app['CacheFilePath'];
-        $baseDir = $app['baseDir'];
-        $configFiles = $app['configFiles'];
-        $debug = $app['$debug'];
+        $app['config'] = function ($app) {
+            if (isset($app['config.CacheFilePath'])) {
+                $cacheFile = $app['config.CacheFilePath'];
+            }
+            if (isset($app['config.baseDir'])) {
+                $baseDir = $app['config.baseDir'];
+            }
+            if (isset($app['config.configFiles'])) {
+                $configFiles = $app['config.configFiles'];
+            }
 
-        if ($debug || !file_exists($cacheFile)) {
-            $configArray = [];
-            foreach ($configFiles as $filename) {
-                $pathFile = $baseDir.'/'.$filename;
-                if (!file_exists($pathFile)) {
-                    throw new \RuntimeException(sprintf('The file "%s" is not found', $pathFile));
-                } elseif (!is_readable($pathFile)) {
-                    throw new \RuntimeException(sprintf('The file "%s" is not readable', $pathFile));
+            if ($app['debug'] || !file_exists($cacheFile)) {
+                $configArray = [];
+                foreach ($configFiles as $filename) {
+                    $pathFile = $baseDir.'/'.$filename;
+                    if (!file_exists($pathFile)) {
+                        throw new \RuntimeException(sprintf('The file "%s" is not found', $pathFile));
+                    } elseif (!is_readable($pathFile)) {
+                        throw new \RuntimeException(sprintf('The file "%s" is not readable', $pathFile));
+                    }
+
+                    $configArray[] = Yaml::parse(file_get_contents($pathFile));
                 }
 
-                $configArray[] = Yaml::parse(file_get_contents($pathFile));
+                $config = call_user_func_array('array_replace_recursive', $configArray);
+
+                file_put_contents($cacheFile, serialize($config));
+            } else {
+                $config = unserialize(file_get_contents($cacheFile));
+                if ($config === false) {
+                    throw new \Exception(sprintf('The config cache file "%s" is malformed or not readable', $cacheFile));
+                }
             }
 
-            $config = call_user_func_array('array_replace_recursive', $configArray);
-
-            file_put_contents($cacheFile, serialize($config));
-        } else {
-            $config = unserialize(file_get_contents($cacheFile));
-            if ($config === false) {
-                throw new \Exception(sprintf('The config cache file "%s" is malformed or not readable', $cacheFile));
-            }
-        }
-
-        $app['config'] = $config;
+            return $config;
+        };
     }
 }

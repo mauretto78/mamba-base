@@ -11,7 +11,6 @@
 
 namespace Mamba\Base\Kernel;
 
-use Mamba\Base\Providers\ConfigServiceProvider;
 use Silex\Application;
 use Silex\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -198,6 +197,11 @@ class Kernel extends Application implements KernelInterface
         return $this->cacheDir;
     }
 
+    private function getCacheFilePath()
+    {
+        return $this->getCacheDir().'/config.cache';
+    }
+
     /**
      * @return string
      */
@@ -258,11 +262,11 @@ class Kernel extends Application implements KernelInterface
             'routing.yml',
         ];
 
-        $this->register(new ConfigServiceProvider(
-            $this->getConfigDir(),
-            $configFiles,
-            $this['debug']
-        ));
+        $this->register(new \Mamba\Base\Providers\ConfigServiceProvider, [
+            'config.CacheFilePath' => $this->getCacheFilePath(),
+            'config.baseDir' => $this->getConfigDir(),
+            'config.configFiles' => $configFiles,
+        ]);
     }
 
     /**
