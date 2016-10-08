@@ -9,12 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Mamba\Base\Type;
+namespace Mamba\Base\Controller;
 
-use Pimple\Container;
-use Symfony\Component\Form\FormFactory;
+use Mamba\Base\App\BaseApplication as Container;
 
-abstract class AbstractType
+class BaseController
 {
     /**
      * @var Container
@@ -22,23 +21,12 @@ abstract class AbstractType
     protected $app;
 
     /**
-     * @var FormFactory
-     */
-    protected $factory;
-
-    /**
-     * @var array
-     */
-    protected $errors;
-
-    /**
-     * AbstractType constructor.
-     *
+     * BaseController constructor.
+     * 
      * @param Container $app
      */
     public function __construct(Container $app)
     {
         $this->app = $app;
-        $this->factory = $this->app['form.factory'];
     }
 }

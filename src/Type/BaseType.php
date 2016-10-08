@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Mamba\Base\Command;
+namespace Mamba\Base\Type;
 
 use Mamba\Base\App\BaseApplication as Container;
-use Mamba\Base\Contracts\BaseCommandInterface;
-use Knp\Command\Command;
+use Mamba\Base\Contracts\BaseTypeInterface;
+use Symfony\Component\Form\FormFactory;
 
-class BaseCommand extends Command implements BaseCommandInterface
+class BaseType implements BaseTypeInterface
 {
     /**
      * @var Container
@@ -23,13 +23,23 @@ class BaseCommand extends Command implements BaseCommandInterface
     protected $app;
 
     /**
-     * BaseCommand constructor.
+     * @var FormFactory
+     */
+    protected $factory;
+
+    /**
+     * @var array
+     */
+    protected $errors;
+
+    /**
+     * BaseType constructor.
+     *
      * @param Container $app
      */
     public function __construct(Container $app)
     {
-        parent::__construct();
-
         $this->app = $app;
+        $this->factory = $this->app->get('form.factory');
     }
 }

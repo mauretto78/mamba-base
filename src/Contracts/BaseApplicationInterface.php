@@ -12,11 +12,11 @@
 namespace Mamba\Base\Contracts;
 
 /**
- * Interface KernelInterface.
+ * Interface BaseApplicationInterface.
  *
  * @author Mauro Cassani
  */
-interface KernelInterface
+interface BaseApplicationInterface
 {
     /**
      * @param string $env

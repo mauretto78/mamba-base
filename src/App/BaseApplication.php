@@ -9,14 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Mamba\Base\Kernel;
+namespace Mamba\Base\App;
 
+use Interop\Container\ContainerInterface;
+use Mamba\Base\Exception\ContainerException as MambaContainerException;
 use Silex\Application;
 use Silex\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Mamba\Base\Contracts\KernelInterface;
+use Mamba\Base\Contracts\BaseApplicationInterface;
 
-abstract class Kernel extends Application implements KernelInterface
+class BaseApplication extends Application implements BaseApplicationInterface, ContainerInterface
 {
     /**
      * @var string
@@ -356,6 +358,10 @@ abstract class Kernel extends Application implements KernelInterface
 
     }
 
+    /**
+     * @param $command
+     * @param $params
+     */
     protected function _registerCommand($command, $params)
     {
         /** @var \Knp\Console\Application $console */
@@ -378,7 +384,7 @@ abstract class Kernel extends Application implements KernelInterface
     }
 
     /**
-     * error handlers.
+     * Custom error handlers.
      */
     protected function _initErrorHandler()
     {
@@ -401,5 +407,77 @@ abstract class Kernel extends Application implements KernelInterface
                     return $this['twig']->render('errors/generic.html.twig', []);
             }
         });
+    }
+
+    /********************************************************************************
+     * Methods to satisfy Interop\Container\ContainerInterface
+     *
+     * modified from: https://github.com/slimphp/Slim/blob/3.x/Slim/Container.php
+     *******************************************************************************/
+
+    /**
+     * @param \InvalidArgumentException $exception
+     * @return bool
+     */
+    private function exceptionThrownByContainer(\InvalidArgumentException $exception)
+    {
+        $trace = $exception->getTrace()[0];
+
+        return $trace['class'] === Application::class && $trace['function'] === 'offsetGet';
+    }
+
+    /**
+     * @param string $id
+     * @return mixed
+     */
+    public function get($id)
+    {
+        if (!$this->offsetExists($id)) {
+            throw new \RuntimeException(sprintf('Identifier "%s" is not defined.', $id));
+        }
+        try {
+            return $this->offsetGet($id);
+        } catch (\InvalidArgumentException $exception) {
+            if ($this->exceptionThrownByContainer($exception)) {
+                throw new MambaContainerException(
+                    sprintf('Container error while retrieving "%s"', $id),
+                    null,
+                    $exception
+                );
+            } else {
+                throw $exception;
+            }
+        }
+    }
+
+    /**
+     * @param string $id
+     * @return bool
+     */
+    public function has($id)
+    {
+        return $this->offsetExists($id);
+    }
+
+    /********************************************************************************
+     * Magic methods for convenience
+     *******************************************************************************/
+
+    /**
+     * @param $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        return $this->get($name);
+    }
+
+    /**
+     * @param $name
+     * @return bool
+     */
+    public function __isset($name)
+    {
+        return $this->has($name);
     }
 }

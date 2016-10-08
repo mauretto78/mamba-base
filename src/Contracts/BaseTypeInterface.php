@@ -19,7 +19,7 @@ use Symfony\Component\Form\FormView;
  *
  * @author Mauro Cassani
  */
-interface TypeInterface
+interface BaseTypeInterface
 {
     /**
      * @return Form

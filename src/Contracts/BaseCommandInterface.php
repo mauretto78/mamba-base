@@ -15,11 +15,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Interface CommandInterface.
+ * Interface BaseCommandInterface.
  *
  * @author Mauro Cassani
  */
-interface CommandInterface
+interface BaseCommandInterface
 {
     /**
      * @return mixed
