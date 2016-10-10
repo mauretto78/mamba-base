@@ -1,6 +1,8 @@
 #Mamba Microframework Base
-The base components of [Mamba Microframework](https://github.com/mauretto78/mamba) :
-- **Kernel** of application;
-- **Providers**: ConfigServiceProvider, ClientServiceProvider;
-- **Abstract Type**, to create symfony forms;
-The package includes all dependencies required by whole framework.
+The base components of Mamba Microframework:
+* **BaseApplication**
+* **BaseCommand**
+* **BaseController**
+* **BaseType**
+* **Providers**
+Please refer to [Official Repository of Mamba Microframework](https://github.com/mauretto78/mamba).
