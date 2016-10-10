@@ -27,7 +27,7 @@ class ClientServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $app)
     {
-        $app['guzzle'] = function ($app) {
+        $app['client'] = function ($app) {
 
             $config = [];
 

@@ -15,9 +15,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Interface BaseCommandInterface.
- *
- * @author Mauro Cassani
+ * Interface BaseCommandInterface
+ * @package Mamba\Base\Contracts
  */
 interface BaseCommandInterface
 {

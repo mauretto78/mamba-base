@@ -11,15 +11,15 @@
 
 namespace Mamba\Base\Providers;
 
-use Mamba\Base\Command\BaseCommand;
+use Mamba\Base\Controller\BaseController;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 
 /**
- * Class BaseCommandServiceProvider
+ * Class BaseControllerServiceProvider
  * @package Mamba\Base\Providers
  */
-class BaseCommandServiceProvider implements ServiceProviderInterface
+class BaseControllerServiceProvider implements ServiceProviderInterface
 {
     /**
      * Register this provider.
@@ -28,8 +28,8 @@ class BaseCommandServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $app)
     {
-        $app['base.command'] = function($app) {
-            return new BaseCommand($app);
+        $app['base.controller'] = function($app) {
+            return new BaseController($app);
         };
     }
 }

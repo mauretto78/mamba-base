@@ -12,9 +12,8 @@
 namespace Mamba\Base\Contracts;
 
 /**
- * Interface BaseApplicationInterface.
- *
- * @author Mauro Cassani
+ * Interface BaseApplicationInterface
+ * @package Mamba\Base\Contracts
  */
 interface BaseApplicationInterface
 {
@@ -66,13 +65,6 @@ interface BaseApplicationInterface
      * @return mixed
      */
     public function setServerName($serverName);
-
-    /**
-     * @param $provider
-     *
-     * @return mixed
-     */
-    public function addProvider($provider);
 
     /**
      * @param $command

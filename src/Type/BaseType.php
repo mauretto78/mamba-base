@@ -15,7 +15,11 @@ use Mamba\Base\App\BaseApplication as Container;
 use Mamba\Base\Contracts\BaseTypeInterface;
 use Symfony\Component\Form\FormFactory;
 
-class BaseType implements BaseTypeInterface
+/**
+ * Class BaseType
+ * @package Mamba\Base\Type
+ */
+abstract class BaseType implements BaseTypeInterface
 {
     /**
      * @var Container
@@ -40,6 +44,30 @@ class BaseType implements BaseTypeInterface
     public function __construct(Container $app)
     {
         $this->app = $app;
-        $this->factory = $this->app->get('form.factory');
+        $this->factory = $this->app->key('form.factory');
+    }
+
+    /**
+     * @return Container
+     */
+    public function getApp()
+    {
+        return $this->app;
+    }
+
+    /**
+     * @return FormFactory
+     */
+    public function getFactory()
+    {
+        return $this->factory;
+    }
+
+    /**
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
     }
 }

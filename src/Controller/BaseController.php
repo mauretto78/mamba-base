@@ -13,6 +13,10 @@ namespace Mamba\Base\Controller;
 
 use Mamba\Base\App\BaseApplication as Container;
 
+/**
+ * Class BaseController
+ * @package Mamba\Base\Controller
+ */
 class BaseController
 {
     /**
@@ -28,5 +32,13 @@ class BaseController
     public function __construct(Container $app)
     {
         $this->app = $app;
+    }
+
+    /**
+     * @return Container
+     */
+    public function getApp()
+    {
+        return $this->app;
     }
 }

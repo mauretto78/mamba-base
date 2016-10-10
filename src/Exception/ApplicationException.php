@@ -10,14 +10,15 @@
  */
 
 namespace Mamba\Base\Exception;
+
 use InvalidArgumentException;
 use Interop\Container\Exception\ContainerException as InteropContainerException;
 
 /**
- * Container Exception
+ * Application Exception
  *
  * @author Mauro Cassani
  */
-class ContainerException extends InvalidArgumentException implements InteropContainerException
+class ApplicationException extends InvalidArgumentException implements InteropContainerException
 {
 }

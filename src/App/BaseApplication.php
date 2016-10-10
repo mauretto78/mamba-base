@@ -12,7 +12,8 @@
 namespace Mamba\Base\App;
 
 use Interop\Container\ContainerInterface;
-use Mamba\Base\Exception\ContainerException as MambaContainerException;
+use Mamba\Base\Exception\ApplicationValueNotFoundException;
+use Mamba\Base\Exception\ApplicationException;
 use Silex\Application;
 use Silex\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -148,17 +149,6 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
     }
 
     /**
-     * @param $provider
-     * @param array $parameters
-     *
-     * @return mixed
-     */
-    public function addProvider($provider)
-    {
-        $this->providers[] = $provider;
-    }
-
-    /**
      * @param $command
      *
      * @return mixed
@@ -238,6 +228,14 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
     }
 
     /**
+     * @return array
+     */
+    public function getCommands()
+    {
+        return $this->commands;
+    }
+    
+    /**
      * Sets the $app['env'].
      */
     protected function _setEnv()
@@ -254,17 +252,10 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
     }
 
     /**
-     * Loads the config files.
+     * @param $configFiles
      */
-    protected function _initConfig()
+    public function initConfig($configFiles)
     {
-        $configFiles = [
-            'app.yml',
-            'config.yml',
-            'parameters.yml',
-            'routing.yml',
-        ];
-
         $this->register(new \Mamba\Base\Providers\ConfigServiceProvider, [
             'config.CacheFilePath' => $this->getCacheFilePath(),
             'config.baseDir' => $this->getConfigDir(),
@@ -275,7 +266,7 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
     /**
      * Set the locale language of app.
      */
-    protected function _initLocale()
+    public function initLocale()
     {
         $this->before(function () {
             $this['translator']->setLocale($this['config']['site']['language']);
@@ -285,7 +276,7 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
     /**
      * Loads the routing system.
      */
-    protected function _initRouting()
+    public function initRouting()
     {
         $app = $this;
 
@@ -308,13 +299,13 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
      *
      * @param $providers
      */
-    protected function _initProviders($providers)
+    public function initProviders($providers)
     {
         foreach ($providers['require'] as $provider => $values) {
             $this->_registerProvider($provider, $values);
         }
 
-        if ($this->getEnv() === 'dev') {
+        if ($this->getEnv() === 'dev' and @$providers['require-dev']) {
             foreach ($providers['require-dev'] as $provider => $values) {
                 $this->_registerProvider($provider, $values);
             }
@@ -339,7 +330,6 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
             throw new \RuntimeException('Provider '.$provider.' must be an instance of \Pimple\ServiceProviderInterface interface.');
         }
 
-        $this->addProvider($provider);
         $this->register($providerInstance, $values);
     }
 
@@ -348,14 +338,13 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
      *
      * @param $commands
      */
-    protected function _initCommands($commands)
+    public function initCommands($commands)
     {
         if ($this->getEnv() === 'dev') {
             foreach ($commands as $command => $params) {
                 $this->_registerCommand($command, $params);
             }
         }
-
     }
 
     /**
@@ -379,14 +368,14 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
             throw new \RuntimeException('Command class '.$command.' must extends Knp\Command\Command.');
         }
 
-        $this->addCommand($command);
+        $this->addCommand($commandClass);
         $console->add($commandClass);
     }
 
     /**
      * Custom error handlers.
      */
-    protected function _initErrorHandler()
+    public function initErrorHandler()
     {
         $this->error(function (\Exception $e, Request $request, $code) {
 
@@ -427,20 +416,23 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
     }
 
     /**
-     * @param string $id
+     * Return the value from the container.
+     * E.g.: $app['key'] === $app->pick('key')
+     *
+     * @param string $key
      * @return mixed
      */
-    public function get($id)
+    public function key($key)
     {
-        if (!$this->offsetExists($id)) {
-            throw new \RuntimeException(sprintf('Identifier "%s" is not defined.', $id));
+        if (!$this->offsetExists($key)) {
+            throw new ApplicationValueNotFoundException(sprintf('Identifier "%s" is not defined.', $key));
         }
         try {
-            return $this->offsetGet($id);
+            return $this->offsetGet($key);
         } catch (\InvalidArgumentException $exception) {
             if ($this->exceptionThrownByContainer($exception)) {
-                throw new MambaContainerException(
-                    sprintf('Container error while retrieving "%s"', $id),
+                throw new ApplicationException(
+                    sprintf('Container error while retrieving "%s"', $key),
                     null,
                     $exception
                 );
@@ -451,12 +443,24 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
     }
 
     /**
-     * @param string $id
+     * @param string $key
      * @return bool
      */
-    public function has($id)
+    public function has($key)
     {
-        return $this->offsetExists($id);
+        return $this->offsetExists($key);
+    }
+
+    /**
+     * @param $key
+     * @param $value
+     * @return mixed
+     */
+    public function set($key, $value)
+    {
+        if(!$this->has($key)){
+            $this[$key] = $value;
+        }
     }
 
     /********************************************************************************
@@ -464,20 +468,30 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
      *******************************************************************************/
 
     /**
-     * @param $name
+     * @param $key
      * @return mixed
      */
-    public function __get($name)
+    public function __get($key)
     {
-        return $this->get($name);
+        return $this->key($key);
     }
 
     /**
-     * @param $name
+     * @param $key
      * @return bool
      */
-    public function __isset($name)
+    public function __isset($key)
     {
-        return $this->has($name);
+        return $this->has($key);
+    }
+
+    /**
+     * @param $key
+     * @param $value
+     * @return mixed
+     */
+    public function __set($key, $value)
+    {
+        return $this->set($key, $value);
     }
 }
