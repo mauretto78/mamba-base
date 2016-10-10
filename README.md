@@ -1,7 +1,7 @@
 Mamba Microframework Base
 =========================
 
-Mamba Microframework is a microframework based on Silex.
+Mamba Framework is a microframework based on Sensiolabs Silex.
 
 Components
 ----------
