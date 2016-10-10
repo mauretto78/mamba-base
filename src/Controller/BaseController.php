@@ -25,8 +25,8 @@ class BaseController
     protected $app;
 
     /**
-     * BaseController constructor.
-     * 
+     * Set the application class to the controller.
+     *
      * @param Container $app
      */
     public function __construct(Container $app)
@@ -40,5 +40,15 @@ class BaseController
     public function getApp()
     {
         return $this->app;
+    }
+
+    /**
+     * @param $file
+     * @param array $params
+     * @return mixed
+     */
+    public function render($file, $params = array())
+    {
+        return $this->app->twig->render($file, $params);
     }
 }

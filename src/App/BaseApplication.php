@@ -234,7 +234,7 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
     {
         return $this->commands;
     }
-    
+
     /**
      * Sets the $app['env'].
      */
@@ -283,8 +283,17 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
         foreach ($this['config']['routings'] as $name => $routing) {
             $method = @$routing['method'] ?: 'get';
 
+            // Register controller as service
+            $route = explode('@', $routing['action']);
+            $controller = strtolower(str_replace('\\', '.', $route[0]));
+            $action = $route[1].'Action';
+
+            $this[$controller] = function() use ($app, $route) {
+                return new $route[0]($app);
+            };
+
             /** @var Route $route */
-            $route = $this->$method($routing['url'], $routing['action'].'Action')->bind($name);
+            $route = $this->$method($routing['url'], $controller.':'.$action)->bind($name);
 
             if (isset($routing['defaults'])) {
                 foreach ($routing['defaults'] as $parameter => $value) {

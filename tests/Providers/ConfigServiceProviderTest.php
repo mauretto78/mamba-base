@@ -19,7 +19,8 @@ class ConfigServiceProviderTest extends \PHPUnit_Framework_TestCase
             'config.CacheFilePath' => 'var/cache/cachefile',
             'config.baseDir' => __DIR__,
             'config.configFiles' => [
-                'config/dummy.yml',
+                '../config/dummy.yml',
+                '../config/routing.yml',
             ],
         ]);
     }

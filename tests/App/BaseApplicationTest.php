@@ -18,6 +18,14 @@ class BaseApplicationTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->app = new Application('dev');
+        $this->app->register(new ConfigServiceProvider(), [
+            'config.CacheFilePath' => 'var/cache/cachefile',
+            'config.baseDir' => __DIR__,
+            'config.configFiles' => [
+                '../config/dummy.yml',
+                '../config/routing.yml',
+            ],
+        ]);
     }
 
     public function testEnv()
@@ -81,6 +89,14 @@ class BaseApplicationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->app->getRootDir(), 'rootdir');
         $this->assertEquals($this->app->getServerName(), 'servername');
         $this->assertEquals($this->app->getViewDir(), 'viewdir');
+    }
+
+    public function testInitRouting()
+    {
+        $this->app->initRouting();
+
+        $this->assertTrue($this->app->has('mamba.base.controller.dummycontroller'));
+        $this->assertInstanceOf('Silex\Controller', $this->app->get('/dummy-url'));
     }
     
     public function testInitProviders()
