@@ -2,8 +2,8 @@
 
 namespace Mamba\Base\Tests;
 
-use Mamba\Base\App\BaseApplication as Application;
-use Mamba\Base\Providers\ClientServiceProvider;
+use Mamba\Base\BaseApplication as Application;
+use Mamba\Providers\ClientServiceProvider;
 
 class ClientServiceProviderTest extends \PHPUnit_Framework_TestCase
 {

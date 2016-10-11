@@ -2,8 +2,8 @@
 
 namespace Mamba\Base\Tests;
 
-use Mamba\Base\App\BaseApplication as Application;
-use Mamba\Base\Type\BaseType;
+use Mamba\Base\BaseApplication as Application;
+use Mamba\Base\BaseType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
@@ -31,12 +31,12 @@ class BaseTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testHasAnApplicationInstance()
     {
-        $this->assertInstanceOf('Mamba\Base\App\BaseApplication', $this->type->getApp());
+        $this->assertInstanceOf('Mamba\Base\BaseApplication', $this->type->getApp());
     }
 
     public function testImplementsBaseCommandInterface()
     {
-        $this->assertInstanceOf('Mamba\Base\Type\BaseType', $this->type);
+        $this->assertInstanceOf('Mamba\Base\BaseType', $this->type);
     }
 
     public function testHasAFormFactoryInstance()

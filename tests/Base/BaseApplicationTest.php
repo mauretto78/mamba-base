@@ -2,11 +2,11 @@
 
 namespace Mamba\Base\Tests;
 
-use Mamba\Base\App\BaseApplication as Application;
-use Mamba\Base\Command\BaseCommand;
-use Mamba\Base\Providers\BaseCommandServiceProvider;
-use Mamba\Base\Providers\ClientServiceProvider;
-use Mamba\Base\Providers\ConfigServiceProvider;
+use Mamba\Base\BaseApplication as Application;
+use Mamba\Base\BaseCommand;
+use Mamba\Providers\BaseCommandServiceProvider;
+use Mamba\Providers\ClientServiceProvider;
+use Mamba\Providers\ConfigServiceProvider;
 
 class BaseApplicationTest extends \PHPUnit_Framework_TestCase
 {
@@ -95,7 +95,7 @@ class BaseApplicationTest extends \PHPUnit_Framework_TestCase
     {
         $this->app->initRouting();
 
-        $this->assertTrue($this->app->has('mamba.base.controller.dummycontroller'));
+        $this->assertTrue($this->app->has('mamba.controller.dummycontroller'));
         $this->assertInstanceOf('Silex\Controller', $this->app->get('/dummy-url'));
     }
     
@@ -104,7 +104,6 @@ class BaseApplicationTest extends \PHPUnit_Framework_TestCase
         $providersToRegister = [
             'require' =>
             [
-                BaseCommandServiceProvider::class => [],
                 ClientServiceProvider::class => [],
                 ConfigServiceProvider::class => [],
             ]
@@ -115,9 +114,8 @@ class BaseApplicationTest extends \PHPUnit_Framework_TestCase
         $providers = $this->app->getProviders();
         $count = count($providers);
 
-        $this->assertInstanceOf('Mamba\Base\Providers\BaseCommandServiceProvider', $providers[$count-3]);
-        $this->assertInstanceOf('Mamba\Base\Providers\ClientServiceProvider', $providers[$count-2]);
-        $this->assertInstanceOf('Mamba\Base\Providers\ConfigServiceProvider', $providers[$count-1]);
+        $this->assertInstanceOf('Mamba\Providers\ClientServiceProvider', $providers[$count-2]);
+        $this->assertInstanceOf('Mamba\Providers\ConfigServiceProvider', $providers[$count-1]);
     }
 
     public function testInitCommands()
@@ -138,6 +136,6 @@ class BaseApplicationTest extends \PHPUnit_Framework_TestCase
         $count = count($commands);
 
         $this->assertCount(1, $commands);
-        $this->assertInstanceOf('Mamba\Base\Command\BaseCommand', $commands[$count-1]);
+        $this->assertInstanceOf('Mamba\Base\BaseCommand', $commands[$count-1]);
     }
 }

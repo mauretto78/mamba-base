@@ -2,8 +2,8 @@
 
 namespace Mamba\Base\Tests;
 
-use Mamba\Base\App\BaseApplication as Application;
-use Mamba\Base\Providers\ConfigServiceProvider;
+use Mamba\Base\BaseApplication as Application;
+use Mamba\Providers\ConfigServiceProvider;
 
 class ConfigServiceProviderTest extends \PHPUnit_Framework_TestCase
 {

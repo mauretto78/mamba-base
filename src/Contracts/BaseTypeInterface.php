@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Mamba\Base\Contracts;
+namespace Mamba\Contracts;
 
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormView;

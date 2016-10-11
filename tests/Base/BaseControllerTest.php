@@ -2,8 +2,8 @@
 
 namespace Mamba\Base\Tests;
 
-use Mamba\Base\App\BaseApplication as Application;
-use Mamba\Base\Controller\BaseController;
+use Mamba\Base\BaseApplication as Application;
+use Mamba\Base\BaseController;
 
 class BaseControllerTest extends \PHPUnit_Framework_TestCase
 {
@@ -25,6 +25,6 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testHasAnApplicationInstance()
     {
-        $this->assertInstanceOf('Mamba\Base\App\BaseApplication', $this->controller->getApp());
+        $this->assertInstanceOf('Mamba\Base\BaseApplication', $this->controller->getApp());
     }
 }

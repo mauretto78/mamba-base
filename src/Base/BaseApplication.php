@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Mamba\Base\App;
+namespace Mamba\Base;
 
 use Interop\Container\ContainerInterface;
-use Mamba\Base\Exception\ApplicationValueNotFoundException;
-use Mamba\Base\Exception\ApplicationException;
+use Mamba\Exception\ApplicationValueNotFoundException;
+use Mamba\Exception\ApplicationException;
 use Silex\Application;
 use Silex\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Mamba\Base\Contracts\BaseApplicationInterface;
+use Mamba\Contracts\BaseApplicationInterface;
 
 class BaseApplication extends Application implements BaseApplicationInterface, ContainerInterface
 {
@@ -256,7 +256,7 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
      */
     public function initConfig($configFiles)
     {
-        $this->register(new \Mamba\Base\Providers\ConfigServiceProvider, [
+        $this->register(new \Mamba\Providers\ConfigServiceProvider, [
             'config.CacheFilePath' => $this->getCacheFilePath(),
             'config.baseDir' => $this->getConfigDir(),
             'config.configFiles' => $configFiles,

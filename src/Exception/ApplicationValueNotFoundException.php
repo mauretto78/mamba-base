@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Mamba\Base\Exception;
+namespace Mamba\Exception;
 
 use RuntimeException;
 use Interop\Container\Exception\NotFoundException as InteropNotFoundException;

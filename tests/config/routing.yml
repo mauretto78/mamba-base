@@ -2,4 +2,4 @@ routings:
     dummy-url:
         method: get
         url: /dummy-url
-        action: Mamba\Base\Controller\DummyController@dummy
+        action: Mamba\Controller\DummyController@dummy

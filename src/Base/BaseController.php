@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Mamba\Base\Controller;
+namespace Mamba\Base;
 
-use Mamba\Base\App\BaseApplication as Container;
+use Mamba\Base\BaseApplication as Container;
 
 /**
  * Class BaseController

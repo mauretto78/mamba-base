@@ -23,7 +23,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Mamba\\Base\\": "src/"
+            "Mamba\\": "src/"
         }
     },
     "minimum-stability": "dev",

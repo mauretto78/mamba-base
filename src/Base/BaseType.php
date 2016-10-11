@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Mamba\Base\Type;
+namespace Mamba\Base;
 
-use Mamba\Base\App\BaseApplication as Container;
-use Mamba\Base\Contracts\BaseTypeInterface;
+use Mamba\Base\BaseApplication as Container;
+use Mamba\Contracts\BaseTypeInterface;
 use Symfony\Component\Form\FormFactory;
 
 /**

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Mamba\Base\Providers;
+namespace Mamba\Providers;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;

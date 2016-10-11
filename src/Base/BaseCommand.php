@@ -9,19 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Mamba\Base\Command;
+namespace Mamba\Base;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Mamba\Base\App\BaseApplication as Container;
+use Mamba\Base\BaseApplication as Container;
 use Knp\Command\Command;
-use Mamba\Base\Contracts\BaseCommandInterface;
 
 /**
  * Class BaseCommand
  * @package Mamba\Base\Command
  */
-class BaseCommand extends Command implements BaseCommandInterface
+class BaseCommand extends Command
 {
     /**
      * @var Container
@@ -50,7 +49,7 @@ class BaseCommand extends Command implements BaseCommandInterface
     /**
      * @return mixed
      */
-    public function configure()
+    protected function configure()
     {}
 
     /**
@@ -58,6 +57,6 @@ class BaseCommand extends Command implements BaseCommandInterface
      * @param OutputInterface $output
      * @return mixed
      */
-    public function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output)
     {}
 }
