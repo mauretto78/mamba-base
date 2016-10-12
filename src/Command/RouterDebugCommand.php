@@ -17,27 +17,12 @@ use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class RouterCommand extends BaseCommand
+class RouterDebugCommand extends BaseCommand
 {
-    /**
-     * @var Application
-     */
-    protected $app;
-
-    /**
-     * RouterCommand constructor.
-     *
-     * @param Application $app
-     */
-    public function __construct(Application $app)
-    {
-        parent::__construct($app);
-    }
-
     protected function configure()
     {
         $this
-            ->setName('app:router')
+            ->setName('app:router:debug')
             ->setDescription('Display info on routes.')
             ->setHelp('');
     }

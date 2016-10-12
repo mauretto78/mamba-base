@@ -121,7 +121,7 @@ class BaseApplicationTest extends \PHPUnit_Framework_TestCase
     public function testInitCommands()
     {
         $commandsToRegister = [
-            BaseCommand::class => [$this->app],
+            BaseCommand::class,
         ];
 
         $this->app->register(new \Knp\Provider\ConsoleServiceProvider(), [

@@ -350,8 +350,8 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
     public function initCommands($commands)
     {
         if ($this->getEnv() === 'dev') {
-            foreach ($commands as $command => $params) {
-                $this->_registerCommand($command, $params);
+            foreach ($commands as $command) {
+                $this->_registerCommand($command);
             }
         }
     }
@@ -360,18 +360,12 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
      * @param $command
      * @param $params
      */
-    protected function _registerCommand($command, $params)
+    protected function _registerCommand($command)
     {
         /** @var \Knp\Console\Application $console */
         $console = $this['console'];
 
-        // check is $values is an array
-        if (!is_array($params)) {
-            throw new \RuntimeException('Params provided for the Command '.$command.' must be an array.');
-        }
-
-        $refl = new \ReflectionClass($command);
-        $commandClass = $refl->newInstanceArgs($params);
+        $commandClass = new $command($this);
 
         if (!is_subclass_of($commandClass, 'Knp\Command\Command')) {
             throw new \RuntimeException('Command class '.$command.' must extends Knp\Command\Command.');
