@@ -11,7 +11,6 @@
 
 namespace Mamba\Command;
 
-use Mamba\Base\BaseApplication as Application;
 use Mamba\Base\BaseCommand;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
