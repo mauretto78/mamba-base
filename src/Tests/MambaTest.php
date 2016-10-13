@@ -6,6 +6,7 @@ use Knp\Command\Command;
 use Mamba\Base\BaseApplication as Application;
 use Knp\Provider\ConsoleServiceProvider;
 use Mamba\Providers\ConfigServiceProvider;
+use Mamba\Providers\ClientServiceProvider;
 
 class MambaTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,11 +21,12 @@ class MambaTest extends \PHPUnit_Framework_TestCase
     protected $command;
 
     /**
-     * setUp method.
+     * setUp the Application and register providers.
      */
     public function setUp()
     {
         $this->app = new Application('dev');
+        $this->app->setRootDir(__DIR__.'/../..');
         $this->app->register(
             new ConsoleServiceProvider(),
             [
@@ -34,13 +36,14 @@ class MambaTest extends \PHPUnit_Framework_TestCase
             ]
         );
         $this->app->register(new ConfigServiceProvider(), [
-            'config.CacheFilePath' => 'var/cache/cachefile',
-            'config.baseDir' => __DIR__,
+            'config.CacheFilePath' => __DIR__.'/../../var/cache/cachefile',
+            'config.baseDir' => __DIR__.'/../../tests',
             'config.configFiles' => [
-                '../config/dummy.yml',
-                '../config/routing.yml',
+                'config/dummy.yml',
+                'config/routing.yml',
             ],
         ]);
+        $this->app->register(new ClientServiceProvider(), []);
     }
 
     /**
@@ -54,5 +57,18 @@ class MambaTest extends \PHPUnit_Framework_TestCase
         $this->command = new $command($this->app);
         $this->app->addCommand($this->command);
         $console->add($this->command);
+    }
+
+    /**
+     * @param $input
+     * @return resource
+     */
+    protected function getInputStream($input)
+    {
+        $stream = fopen('php://memory', 'r+', false);
+        fputs($stream, $input);
+        rewind($stream);
+
+        return $stream;
     }
 }

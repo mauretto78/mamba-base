@@ -18,6 +18,7 @@ class DebugDumpCommandTest extends MambaTest
 
         // the output of the command in the console
         $output = $commandTester->getDisplay();
+
         $this->assertContains('argument_metadata_factory', $output);
         $this->assertContains('argument_resolver', $output);
         $this->assertContains('argument_value_resolvers', $output);

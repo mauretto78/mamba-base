@@ -29,6 +29,55 @@ class ControllerDeleteCommand extends BaseCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $helper = $this->getHelper('question');
 
+        $controllers = [];
+        foreach(glob($this->getControllerDir().'/*') as $file) {
+            $pathinfo = pathinfo($file);
+            $controllers[] = $pathinfo['filename'];
+        }
+
+        $question = new Question('<question>Please enter the name of the Controller:</question> ');
+        $question->setAutocompleterValues($controllers);
+        $controller = $helper->ask($input, $output, $question);
+
+        $deleteController = $this->_deleteController($controller);
+
+        switch ($deleteController){
+            case 0:
+                $output->writeln('<error>Error deleting controller '.$controller.'.</error>');
+                break;
+
+            case 1:
+                $output->writeln('<info>Controller '.$controller.' was successfully deleted.</info>');
+                break;
+
+            case 2:
+                $output->writeln('<error>Controller '.$controller.' does not exists.</error>');
+                break;
+        }
+    }
+
+    /**
+     * Delete a Controller.
+     *
+     * @param $entity
+     * @return int
+     */
+    private function _deleteController($controller)
+    {
+        $file = $this->getControllerDir().'/'.$controller.'.php';
+
+        // Check the file
+        if(!file_exists($file)){
+            return 2;
+        }
+
+        // Delete the Entity
+        if(unlink($file)){
+            return 1;
+        }
+
+        return 0;
     }
 }

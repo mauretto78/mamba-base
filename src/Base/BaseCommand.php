@@ -47,6 +47,46 @@ class BaseCommand extends Command
     }
 
     /**
+     * @return string
+     */
+    public function getControllerNamespace()
+    {
+        return '\Mamba\Controller\\';
+    }
+
+    /**
+     * @return string
+     */
+    public function getControllerDir()
+    {
+        return $this->app->getRootDir().'/src/Controller';
+    }
+
+    /**
+     * @return string
+     */
+    public function getEntityNamespace()
+    {
+        return '\Mamba\Entity\\';
+    }
+
+    /**
+     * @return string
+     */
+    public function getEntityDir()
+    {
+        return $this->app->getRootDir().'/src/Entity';
+    }
+
+    /**
+     * @return string
+     */
+    public function getRepoDir()
+    {
+        return $this->app->getRootDir().'/src/Repository';
+    }
+
+    /**
      * @return mixed
      */
     protected function configure()

@@ -19,30 +19,6 @@ use Symfony\Component\Console\Question\Question;
 
 class EntityDeleteCommand extends BaseCommand
 {
-    /**
-     * @return string
-     */
-    public function getEntityNamespace()
-    {
-        return '\Mamba\Entity\\';
-    }
-
-    /**
-     * @return string
-     */
-    public function getEntityDir()
-    {
-        return $this->app->getRootDir().'/src/Entity';
-    }
-
-    /**
-     * @return string
-     */
-    public function getRepoDir()
-    {
-        return $this->app->getRootDir().'/src/Repository';
-    }
-
     protected function configure()
     {
         $this
