@@ -4,19 +4,15 @@ namespace Mamba\Base\Tests;
 
 use Mamba\Base\BaseApplication as Application;
 use Mamba\Base\BaseType;
+use Mamba\Tests\MambaTest;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormView;
 use Silex\Provider\FormServiceProvider;
 
-class BaseTypeTest extends \PHPUnit_Framework_TestCase
+class BaseTypeTest extends MambaTest
 {
-    /**
-     * @var Application
-     */
-    protected $app;
-
     /**
      * @var BaseType
      */
@@ -24,7 +20,7 @@ class BaseTypeTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->app = new Application('dev');
+        parent::setUp();
         $this->app->register(new FormServiceProvider());
         $this->type = new SampleType($this->app);
     }

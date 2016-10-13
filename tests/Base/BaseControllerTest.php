@@ -4,14 +4,10 @@ namespace Mamba\Base\Tests;
 
 use Mamba\Base\BaseApplication as Application;
 use Mamba\Base\BaseController;
+use Mamba\Tests\MambaTest;
 
-class BaseControllerTest extends \PHPUnit_Framework_TestCase
+class BaseControllerTest extends MambaTest
 {
-    /**
-     * @var Application
-     */
-    protected $app;
-
     /**
      * @var BaseController
      */
@@ -19,7 +15,7 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->app = new Application('dev');
+        parent::setUp();
         $this->controller = new BaseController($this->app);
     }
 

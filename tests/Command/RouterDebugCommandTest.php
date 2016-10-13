@@ -1,0 +1,23 @@
+<?php
+
+namespace Mamba\Command\Tests;
+
+use Mamba\Command\RouterDebugCommand;
+use Mamba\Tests\MambaTest;
+use Symfony\Component\Console\Tester\CommandTester;
+
+class RouterDebugCommandTest extends MambaTest
+{
+    public function testExecute()
+    {
+        $this->registerCommand(new RouterDebugCommand($this->app));
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute(array(
+
+        ));
+
+        // the output of the command in the console
+        $output = $commandTester->getDisplay();
+        $this->assertContains('dummy-url', $output);
+    }
+}

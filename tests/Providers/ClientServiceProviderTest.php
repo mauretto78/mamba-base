@@ -4,17 +4,13 @@ namespace Mamba\Providers\Tests;
 
 use Mamba\Base\BaseApplication as Application;
 use Mamba\Providers\ClientServiceProvider;
+use Mamba\Tests\MambaTest;
 
-class ClientServiceProviderTest extends \PHPUnit_Framework_TestCase
+class ClientServiceProviderTest extends MambaTest
 {
-    /**
-     * @var Application
-     */
-    protected $app;
-
     public function setUp()
     {
-        $this->app = new Application('dev');
+        parent::setUp();
         $this->app->register(new ClientServiceProvider(), []);
     }
 
