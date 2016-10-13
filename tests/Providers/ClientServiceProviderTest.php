@@ -1,6 +1,6 @@
 <?php
 
-namespace Mamba\Base\Tests;
+namespace Mamba\Providers\Tests;
 
 use Mamba\Base\BaseApplication as Application;
 use Mamba\Providers\ClientServiceProvider;
