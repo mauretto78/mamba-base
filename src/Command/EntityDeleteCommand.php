@@ -12,7 +12,6 @@
 namespace Mamba\Command;
 
 use Mamba\Base\BaseCommand;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
@@ -32,7 +31,7 @@ class EntityDeleteCommand extends BaseCommand
         $helper = $this->getHelper('question');
 
         $entities = [];
-        foreach(glob($this->getEntityDir().'/*') as $file) {
+        foreach (glob($this->getEntityDir().'/*') as $file) {
             $pathinfo = pathinfo($file);
             $entities[] = $pathinfo['filename'];
         }
@@ -43,7 +42,7 @@ class EntityDeleteCommand extends BaseCommand
 
         $deleteEntity = $this->_deleteEntity($entity);
 
-        switch ($deleteEntity){
+        switch ($deleteEntity) {
             case 0:
                 $output->writeln('<error>Error deleting entity '.$entity.'.</error>');
                 break;
@@ -62,6 +61,7 @@ class EntityDeleteCommand extends BaseCommand
      * Delete an Entity.
      *
      * @param $entity
+     *
      * @return int
      */
     private function _deleteEntity($entity)
@@ -70,12 +70,12 @@ class EntityDeleteCommand extends BaseCommand
         $repo = $this->getRepoDir().'/'.$entity.'Repository.php';
 
         // Check the file
-        if(!file_exists($file) and !file_exists($repo)){
+        if (!file_exists($file) and !file_exists($repo)) {
             return 2;
         }
 
         // Delete the Entity
-        if(unlink($file) and unlink($repo)){
+        if (unlink($file) and unlink($repo)) {
             return 1;
         }
 

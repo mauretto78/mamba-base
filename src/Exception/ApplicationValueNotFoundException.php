@@ -15,7 +15,7 @@ use RuntimeException;
 use Interop\Container\Exception\NotFoundException as InteropNotFoundException;
 
 /**
- * ApplicationValueNotFoundException
+ * ApplicationValueNotFoundException.
  *
  * @author Mauro Cassani
  */

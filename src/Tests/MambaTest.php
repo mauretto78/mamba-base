@@ -32,7 +32,7 @@ class MambaTest extends \PHPUnit_Framework_TestCase
             [
                 'console.name' => 'Mamba Console Tester',
                 'console.version' => '1.0.0',
-                'console.project_directory' => __DIR__ . "/.."
+                'console.project_directory' => __DIR__.'/..',
             ]
         );
         $this->app->register(new ConfigServiceProvider(), [
@@ -61,6 +61,7 @@ class MambaTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param $input
+     *
      * @return resource
      */
     protected function getInputStream($input)

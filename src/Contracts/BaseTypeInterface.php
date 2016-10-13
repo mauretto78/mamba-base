@@ -15,8 +15,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormView;
 
 /**
- * Interface BaseTypeInterface
- * @package Mamba\Base\Contracts
+ * Interface BaseTypeInterface.
  */
 interface BaseTypeInterface
 {

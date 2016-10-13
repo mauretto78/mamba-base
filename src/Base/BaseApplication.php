@@ -256,7 +256,7 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
      */
     public function initConfig($configFiles)
     {
-        $this->register(new \Mamba\Providers\ConfigServiceProvider, [
+        $this->register(new \Mamba\Providers\ConfigServiceProvider(), [
             'config.CacheFilePath' => $this->getCacheFilePath(),
             'config.baseDir' => $this->getConfigDir(),
             'config.configFiles' => $configFiles,
@@ -288,7 +288,7 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
             $controller = strtolower(str_replace('\\', '.', $route[0]));
             $action = $route[1].'Action';
 
-            $this[$controller] = function() use ($app, $route) {
+            $this[$controller] = function () use ($app, $route) {
                 return new $route[0]($app);
             };
 
@@ -409,6 +409,7 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
 
     /**
      * @param \InvalidArgumentException $exception
+     *
      * @return bool
      */
     private function exceptionThrownByContainer(\InvalidArgumentException $exception)
@@ -420,9 +421,10 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
 
     /**
      * Return the value from the container.
-     * E.g.: $app['key'] === $app->pick('key')
+     * E.g.: $app['key'] === $app->pick('key').
      *
      * @param string $key
+     *
      * @return mixed
      */
     public function key($key)
@@ -447,6 +449,7 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
 
     /**
      * @param string $key
+     *
      * @return bool
      */
     public function has($key)
@@ -457,11 +460,12 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
     /**
      * @param $key
      * @param $value
+     *
      * @return mixed
      */
     public function set($key, $value)
     {
-        if(!$this->has($key)){
+        if (!$this->has($key)) {
             $this[$key] = $value;
         }
     }
@@ -472,6 +476,7 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
 
     /**
      * @param $key
+     *
      * @return mixed
      */
     public function __get($key)
@@ -481,6 +486,7 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
 
     /**
      * @param $key
+     *
      * @return bool
      */
     public function __isset($key)
@@ -491,6 +497,7 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
     /**
      * @param $key
      * @param $value
+     *
      * @return mixed
      */
     public function __set($key, $value)

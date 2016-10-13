@@ -39,7 +39,7 @@ class EntityCreateCommand extends BaseCommand
 
         $createEntity = $this->_createEntity($entity, $table);
 
-        switch ($createEntity){
+        switch ($createEntity) {
             case 0:
                 $output->writeln('<error>Error creating entity '.$entity.'.</error>');
                 break;
@@ -57,7 +57,7 @@ class EntityCreateCommand extends BaseCommand
                 break;
         }
     }
-    
+
     private function _createEntity($entity, $table = null)
     {
         $class = '\Mamba\Entity\\'.$entity;
@@ -65,17 +65,17 @@ class EntityCreateCommand extends BaseCommand
         $repo = $this->app->getRootDir().'/src/Repository/'.$entity.'Repository.php';
 
         // Duplicate file
-        if(file_exists($file)){
+        if (file_exists($file)) {
             return 3;
         }
 
         // Duplicate Class
-        if(class_exists($class)){
+        if (class_exists($class)) {
             return 2;
         }
 
         // Create Entity and Repository
-        if($newEntity = fopen($file, 'w') and $newRepo = fopen($repo, 'w')){
+        if ($newEntity = fopen($file, 'w') and $newRepo = fopen($repo, 'w')) {
             $txt = '<?php
 
 namespace Mamba\Entity;

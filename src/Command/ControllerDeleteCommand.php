@@ -12,7 +12,6 @@
 namespace Mamba\Command;
 
 use Mamba\Base\BaseCommand;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
@@ -32,7 +31,7 @@ class ControllerDeleteCommand extends BaseCommand
         $helper = $this->getHelper('question');
 
         $controllers = [];
-        foreach(glob($this->getControllerDir().'/*') as $file) {
+        foreach (glob($this->getControllerDir().'/*') as $file) {
             $pathinfo = pathinfo($file);
             $controllers[] = $pathinfo['filename'];
         }
@@ -43,7 +42,7 @@ class ControllerDeleteCommand extends BaseCommand
 
         $deleteController = $this->_deleteController($controller);
 
-        switch ($deleteController){
+        switch ($deleteController) {
             case 0:
                 $output->writeln('<error>Error deleting controller '.$controller.'.</error>');
                 break;
@@ -62,6 +61,7 @@ class ControllerDeleteCommand extends BaseCommand
      * Delete a Controller.
      *
      * @param $entity
+     *
      * @return int
      */
     private function _deleteController($controller)
@@ -69,12 +69,12 @@ class ControllerDeleteCommand extends BaseCommand
         $file = $this->getControllerDir().'/'.$controller.'.php';
 
         // Check the file
-        if(!file_exists($file)){
+        if (!file_exists($file)) {
             return 2;
         }
 
         // Delete the Entity
-        if(unlink($file)){
+        if (unlink($file)) {
             return 1;
         }
 

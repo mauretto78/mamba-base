@@ -2,7 +2,6 @@
 
 namespace Mamba\Base\Tests;
 
-use Mamba\Base\BaseApplication as Application;
 use Mamba\Base\BaseController;
 use Mamba\Tests\MambaTest;
 

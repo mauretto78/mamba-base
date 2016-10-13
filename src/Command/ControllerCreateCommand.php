@@ -12,7 +12,6 @@
 namespace Mamba\Command;
 
 use Mamba\Base\BaseCommand;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
@@ -43,7 +42,7 @@ class ControllerCreateCommand extends BaseCommand
 
         $createController = $this->_createController($controller);
 
-        switch ($createController){
+        switch ($createController) {
             case 0:
                 $output->writeln('<error>Error creating entity '.$controller.'.</error>');
                 break;
@@ -69,17 +68,17 @@ class ControllerCreateCommand extends BaseCommand
         $file = $this->getControllerDir().'/'.$controller.'Controller.php';
 
         // Duplicate file
-        if(file_exists($file)){
+        if (file_exists($file)) {
             return 3;
         }
 
         // Duplicate Class
-        if(class_exists($class)){
+        if (class_exists($class)) {
             return 2;
         }
 
         // Create Controller
-        if($newController = fopen($file, 'w')){
+        if ($newController = fopen($file, 'w')) {
             $txt = '<?php
 
 namespace Mamba\Controller;

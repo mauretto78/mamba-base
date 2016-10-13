@@ -3,7 +3,6 @@
 namespace Mamba\Base\Tests;
 
 use Mamba\Base\BaseCommand;
-use Mamba\Providers\BaseCommandServiceProvider;
 use Mamba\Providers\ClientServiceProvider;
 use Mamba\Providers\ConfigServiceProvider;
 use Mamba\Tests\MambaTest;
@@ -31,7 +30,7 @@ class BaseApplicationTest extends MambaTest
 
     public function testSetACallbackInContainer()
     {
-        $this->app->set('foo', function(){
+        $this->app->set('foo', function () {
             return new \GuzzleHttp\Psr7\Response();
         });
         $this->assertInstanceOf(\GuzzleHttp\Psr7\Response::class, $this->app->foo);
@@ -50,12 +49,12 @@ class BaseApplicationTest extends MambaTest
      */
     public function testGetAValueFromContainerWithDiConfigErrorThrownAsContainerValueNotFoundException()
     {
-        $this->app->set('foo',  function() {
+        $this->app->set('foo',  function () {
             return $this->app->key('doesnt-exist');
         });
         $this->app->key('foo');
     }
-    
+
     public function testSettersAndGetters()
     {
         $this->app->setCacheDir('cachedir');
@@ -80,15 +79,14 @@ class BaseApplicationTest extends MambaTest
         $this->assertTrue($this->app->has('mamba.controller.dummycontroller'));
         $this->assertInstanceOf('Silex\Controller', $this->app->get('/dummy-url'));
     }
-    
+
     public function testInitProviders()
     {
         $providersToRegister = [
-            'require' =>
-            [
+            'require' => [
                 ClientServiceProvider::class => [],
                 ConfigServiceProvider::class => [],
-            ]
+            ],
         ];
 
         $this->app->initProviders($providersToRegister);
@@ -96,8 +94,8 @@ class BaseApplicationTest extends MambaTest
         $providers = $this->app->getProviders();
         $count = count($providers);
 
-        $this->assertInstanceOf('Mamba\Providers\ClientServiceProvider', $providers[$count-2]);
-        $this->assertInstanceOf('Mamba\Providers\ConfigServiceProvider', $providers[$count-1]);
+        $this->assertInstanceOf('Mamba\Providers\ClientServiceProvider', $providers[$count - 2]);
+        $this->assertInstanceOf('Mamba\Providers\ConfigServiceProvider', $providers[$count - 1]);
     }
 
     public function testInitCommands()
@@ -118,6 +116,6 @@ class BaseApplicationTest extends MambaTest
         $count = count($commands);
 
         $this->assertCount(1, $commands);
-        $this->assertInstanceOf('Mamba\Base\BaseCommand', $commands[$count-1]);
+        $this->assertInstanceOf('Mamba\Base\BaseCommand', $commands[$count - 1]);
     }
 }

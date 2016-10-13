@@ -15,7 +15,7 @@ use InvalidArgumentException;
 use Interop\Container\Exception\ContainerException as InteropContainerException;
 
 /**
- * Application Exception
+ * Application Exception.
  *
  * @author Mauro Cassani
  */

@@ -16,8 +16,7 @@ use Mamba\Contracts\BaseTypeInterface;
 use Symfony\Component\Form\FormFactory;
 
 /**
- * Class BaseType
- * @package Mamba\Base\Type
+ * Class BaseType.
  */
 abstract class BaseType implements BaseTypeInterface
 {

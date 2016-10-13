@@ -17,8 +17,7 @@ use Mamba\Base\BaseApplication as Container;
 use Knp\Command\Command;
 
 /**
- * Class BaseCommand
- * @package Mamba\Base\Command
+ * Class BaseCommand.
  */
 class BaseCommand extends Command
 {
@@ -29,6 +28,7 @@ class BaseCommand extends Command
 
     /**
      * BaseCommand constructor.
+     *
      * @param Container $app
      */
     public function __construct(Container $app)
@@ -90,13 +90,16 @@ class BaseCommand extends Command
      * @return mixed
      */
     protected function configure()
-    {}
+    {
+    }
 
     /**
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
+     *
      * @return mixed
      */
     protected function execute(InputInterface $input, OutputInterface $output)
-    {}
+    {
+    }
 }

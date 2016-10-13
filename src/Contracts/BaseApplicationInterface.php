@@ -12,8 +12,7 @@
 namespace Mamba\Contracts;
 
 /**
- * Interface BaseApplicationInterface
- * @package Mamba\Base\Contracts
+ * Interface BaseApplicationInterface.
  */
 interface BaseApplicationInterface
 {

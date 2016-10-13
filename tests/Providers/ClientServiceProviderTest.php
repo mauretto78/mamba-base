@@ -2,8 +2,6 @@
 
 namespace Mamba\Providers\Tests;
 
-use Mamba\Base\BaseApplication as Application;
-use Mamba\Providers\ClientServiceProvider;
 use Mamba\Tests\MambaTest;
 
 class ClientServiceProviderTest extends MambaTest

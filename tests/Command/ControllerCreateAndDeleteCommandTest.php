@@ -47,6 +47,4 @@ class ControllerCreateAndDeleteCommandTest extends MambaTest
         $output = $commandTester->getDisplay();
         $this->assertContains('Controller AcmeController was successfully deleted.', $output);
     }
-
-
 }

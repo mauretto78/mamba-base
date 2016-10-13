@@ -14,8 +14,7 @@ namespace Mamba\Base;
 use Mamba\Base\BaseApplication as Container;
 
 /**
- * Class BaseController
- * @package Mamba\Base\Controller
+ * Class BaseController.
  */
 class BaseController
 {
@@ -45,6 +44,7 @@ class BaseController
     /**
      * @param $file
      * @param array $params
+     *
      * @return mixed
      */
     public function render($file, $params = array())

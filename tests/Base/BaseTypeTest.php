@@ -2,7 +2,6 @@
 
 namespace Mamba\Base\Tests;
 
-use Mamba\Base\BaseApplication as Application;
 use Mamba\Base\BaseType;
 use Mamba\Tests\MambaTest;
 use Symfony\Component\Form\Extension\Core\Type\FormType;

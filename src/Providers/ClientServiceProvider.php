@@ -28,7 +28,6 @@ class ClientServiceProvider implements ServiceProviderInterface
     public function register(Container $app)
     {
         $app['client'] = function ($app) {
-
             $config = [];
 
             if (isset($app['guzzle.base_uri'])) {

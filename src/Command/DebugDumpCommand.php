@@ -15,7 +15,6 @@ use Mamba\Base\BaseCommand;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
 
 class DebugDumpCommand extends BaseCommand
 {
@@ -35,20 +34,20 @@ class DebugDumpCommand extends BaseCommand
         $counter = 0;
         $rows = [];
 
-        foreach($keys as $key){
+        foreach ($keys as $key) {
             ++$counter;
             $getKey = $this->app->key($key);
 
             // check if $k is an object
-            if(is_object($getKey)){
+            if (is_object($getKey)) {
                 $type = '<error>class</error>';
                 $value = get_class($getKey);
                 // check if $k is an array
-            } elseif(is_array($getKey)) {
+            } elseif (is_array($getKey)) {
                 $type = '<comment>array</comment>';
                 $value = '';
                 $keys = array_keys($getKey);
-                foreach ($keys as $k){
+                foreach ($keys as $k) {
                     $value .= '['.$k.'] ';
                 }
                 // check if $k is a string
