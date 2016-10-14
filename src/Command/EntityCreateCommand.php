@@ -16,6 +16,7 @@ use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
+use Stringy\Stringy as S;
 
 class EntityCreateCommand extends BaseCommand
 {
@@ -32,10 +33,20 @@ class EntityCreateCommand extends BaseCommand
         $helper = $this->getHelper('question');
 
         $question = new Question('<question>Please enter the name of the Entity:</question> ', 'Acme');
+        $question->setValidator(function ($value) {
+            if (trim($value) == '') {
+                throw new \Exception('The Entity name can not be empty');
+            }
+
+            return $value;
+        });
         $entity = $helper->ask($input, $output, $question);
 
         $question2 = new Question('<question>Please enter the name of the SQL table:</question> ', null);
         $table = $helper->ask($input, $output, $question2);
+
+        $question3 = new Question('<question>Please enter fields:</question> ', null);
+        $fields = $helper->ask($input, $output, $question3);
 
         $createEntity = $this->_createEntity($entity, $table);
 
@@ -58,8 +69,23 @@ class EntityCreateCommand extends BaseCommand
         }
     }
 
+    /**
+     * @param $entity
+     * @return S
+     */
+    private function _getEntityName($entity)
+    {
+        return  S::create($entity)->upperCamelize();
+    }
+
+    /**
+     * @param $entity
+     * @param null $table
+     * @return int
+     */
     private function _createEntity($entity, $table = null)
     {
+        $entity = $this->_getEntityName($entity);
         $class = '\Mamba\Entity\\'.$entity;
         $file = $this->app->getRootDir().'/src/Entity/'.$entity.'.php';
         $repo = $this->app->getRootDir().'/src/Repository/'.$entity.'Repository.php';

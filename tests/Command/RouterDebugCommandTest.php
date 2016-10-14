@@ -10,7 +10,7 @@ class RouterDebugCommandTest extends MambaTest
 {
     public function testExecute()
     {
-        $this->registerCommand(new RouterDebugCommand($this->app));
+        $this->setCommand(new RouterDebugCommand($this->app));
         $commandTester = new CommandTester($this->command);
         $commandTester->execute(array(
 

@@ -2,11 +2,14 @@
 
 namespace Mamba\Tests;
 
-use Knp\Command\Command;
+use Doctrine\ORM\EntityManager;
+use Dflydev\Provider\DoctrineOrm\DoctrineOrmServiceProvider;
 use Mamba\Base\BaseApplication as Application;
-use Knp\Provider\ConsoleServiceProvider;
 use Mamba\Providers\ConfigServiceProvider;
 use Mamba\Providers\ClientServiceProvider;
+use Knp\Command\Command;
+use Knp\Provider\ConsoleServiceProvider;
+use Silex\Provider\DoctrineServiceProvider;
 
 class MambaTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,12 +24,19 @@ class MambaTest extends \PHPUnit_Framework_TestCase
     protected $command;
 
     /**
+     * @var EntityManager
+     */
+    protected $em;
+
+    /**
      * setUp the Application and register providers.
      */
     public function setUp()
     {
         $this->app = new Application('dev');
         $this->app->setRootDir(__DIR__.'/../..');
+        $this->app->setCacheDir($this->app->getRootDir().'/var/cache');
+
         $this->app->register(
             new ConsoleServiceProvider(),
             [
@@ -43,13 +53,36 @@ class MambaTest extends \PHPUnit_Framework_TestCase
                 'config/routing.yml',
             ],
         ]);
+        $this->app->register(new DoctrineServiceProvider(), [
+            'db.options' => [
+                'driver' => 'pdo_mysql',
+                'host' => 'localhost',
+                'dbname' => 'mamba_test',
+                'user' => 'root',
+                'password' => '',
+                'charset' => 'utf8mb4',
+            ],
+        ]);
+        $this->app->register(new DoctrineOrmServiceProvider(), [
+            'orm.proxies_dir' => $this->app->getCacheDir().'/doctrine/proxies',
+            'orm.em.options' => [
+                'mappings' => [
+                    [
+                        'use_simple_annotation_reader' => false,
+                        'type' => 'annotation',
+                        'namespace' => 'Mamba\Entity',
+                        'path' => __DIR__.'/../src/Entity',
+                    ],
+                ],
+            ],
+        ]);
         $this->app->register(new ClientServiceProvider(), []);
     }
 
     /**
      * @param Command $command
      */
-    public function registerCommand(Command $command)
+    public function setCommand(Command $command)
     {
         /** @var \Knp\Console\Application $console */
         $console = $this->app->key('console');
@@ -59,6 +92,14 @@ class MambaTest extends \PHPUnit_Framework_TestCase
         $console->add($this->command);
     }
 
+    /**
+     * @param EntityManager $em
+     */
+    public function setEm($em)
+    {
+        $this->em = $em;
+    }
+    
     /**
      * @param $input
      *

@@ -12,39 +12,39 @@ class ControllerCreateAndDeleteCommandTest extends MambaTest
 {
     public function testExecute()
     {
-        $this->registerCommand(new ControllerCreateCommand($this->app));
+        $this->setCommand(new ControllerCreateCommand($this->app));
         $commandTester = new CommandTester($this->command);
 
         /** @var QuestionHelper $helper */
         $helper = $this->command->getHelper('question');
 
         // 1. Create Controller
-        $helper->setInputStream($this->getInputStream('Acme'));
+        $helper->setInputStream($this->getInputStream('Acme with space'));
         $commandTester->execute([
 
         ]);
         $output = $commandTester->getDisplay();
-        $this->assertContains('Controller Acme was successfully created.', $output);
+        $this->assertContains('Controller AcmeWithSpace was successfully created.', $output);
 
         // 2. Says Controller exists
-        $helper->setInputStream($this->getInputStream('Acme'));
+        $helper->setInputStream($this->getInputStream('Acme with space'));
         $commandTester->execute([
 
         ]);
         $output = $commandTester->getDisplay();
-        $this->assertContains('File src/Controller/AcmeController.php already exists.', $output);
+        $this->assertContains('File src/Controller/AcmeWithSpaceController.php already exists.', $output);
 
         // 3. Delete Controller
-        $this->registerCommand(new ControllerDeleteCommand($this->app));
+        $this->setCommand(new ControllerDeleteCommand($this->app));
         $commandTester = new CommandTester($this->command);
 
         /** @var QuestionHelper $helper */
         $helper = $this->command->getHelper('question');
-        $helper->setInputStream($this->getInputStream('AcmeController'));
+        $helper->setInputStream($this->getInputStream('AcmeWithSpaceController'));
         $commandTester->execute([
 
         ]);
         $output = $commandTester->getDisplay();
-        $this->assertContains('Controller AcmeController was successfully deleted.', $output);
+        $this->assertContains('Controller AcmeWithSpaceController was successfully deleted.', $output);
     }
 }

@@ -15,6 +15,7 @@ use Mamba\Base\BaseCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
+use Stringy\Stringy as S;
 
 class ControllerCreateCommand extends BaseCommand
 {
@@ -44,26 +45,31 @@ class ControllerCreateCommand extends BaseCommand
 
         switch ($createController) {
             case 0:
-                $output->writeln('<error>Error creating entity '.$controller.'.</error>');
+                $output->writeln('<error>Error creating entity '.$this->_getControllerName($controller).'.</error>');
                 break;
 
             case 1:
-                $output->writeln('<info>Controller '.$controller.' was successfully created.</info>');
+                $output->writeln('<info>Controller '.$this->_getControllerName($controller).' was successfully created.</info>');
                 break;
 
             case 2:
-                $output->writeln('<error>Controller \Mamba\Controller\\'.$controller.' already exists.</error>');
+                $output->writeln('<error>Controller \Mamba\Controller\\'.$this->_getControllerName($controller).' already exists.</error>');
                 break;
 
             case 3:
-                $output->writeln('<error>File src/Controller/'.$controller.'Controller.php already exists.</error>');
+                $output->writeln('<error>File src/Controller/'.$this->_getControllerName($controller).'Controller.php already exists.</error>');
                 break;
         }
     }
 
+    private function _getControllerName($controller)
+    {
+        return  S::create($controller)->upperCamelize();
+    }
+
     private function _createController($controller)
     {
-        $controller = trim(ucfirst($controller));
+        $controller = $this->_getControllerName($controller);
         $class = $this->getControllerNamespace().'/'.$controller;
         $file = $this->getControllerDir().'/'.$controller.'Controller.php';
 

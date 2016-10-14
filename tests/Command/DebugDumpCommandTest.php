@@ -10,7 +10,7 @@ class DebugDumpCommandTest extends MambaTest
 {
     public function testExecute()
     {
-        $this->registerCommand(new DebugDumpCommand($this->app));
+        $this->setCommand(new DebugDumpCommand($this->app));
         $commandTester = new CommandTester($this->command);
         $commandTester->execute(array(
 
