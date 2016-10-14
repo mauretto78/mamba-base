@@ -21,8 +21,8 @@ class EntityCreateAndDeleteCommandTest extends MambaTest
         // 1. Create Entity
         $helper->setInputStream($this->getInputStream(
             "Acme\n"
-            . "Acme\n"
-            . "title:string(length=100 nullable=true unique=false) body:text ranking:decimal(precision=10 scale=0)\n"
+            . "acme\n"
+            . "title:string(length=100 nullable=true unique=false)|body:text|ranking:decimal(precision=10 scale=0)\n"
         ));
         $commandTester->execute([
 
