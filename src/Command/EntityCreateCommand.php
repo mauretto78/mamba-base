@@ -60,11 +60,11 @@ class EntityCreateCommand extends BaseCommand
                 break;
 
             case 2:
-                $output->writeln('<error>Entity \Mamba\Entity\\'.$entity.' already exists</error>');
+                $output->writeln('<error>Entity \Mamba\Entity\\'.$entity.' already exists.</error>');
                 break;
 
             case 3:
-                $output->writeln('<error>File src/Entity/'.$entity.'.php already exists</error>');
+                $output->writeln('<error>File src/Entity/'.$entity.'.php already exists.</error>');
                 break;
         }
     }
@@ -90,8 +90,6 @@ class EntityCreateCommand extends BaseCommand
         $code .= 'namespace Mamba\Entity;';
         $code .= "\n\n";
         $code .= 'use Doctrine\ORM\Mapping as ORM;';
-        $code .= "\n";
-        $code .= 'use Doctrine\ORM\Mapping\Column;';
         $code .= "\n\n";
         $code .='/**';
         $code .= "\n";
@@ -116,26 +114,48 @@ class EntityCreateCommand extends BaseCommand
         return $code;
     }
 
+    /**
+     * @param $fields
+     * @return null|string
+     */
     private function _getEntityCodeFields($fields)
     {
         $fields = explode('|', $fields);
-        $code = '';
 
         if(!is_array($fields)) {
-            return $code;
+            return null;
         }
+
+        $code = '';
+        $code .= "\n\t";
+        $code .='/**';
+        $code .= "\n\t";
+        $code .=' * @ORM\Column(name="id", type="integer", nullable=false)';
+        $code .= "\n\t";
+        $code .=' * @ORM\Id';
+        $code .= "\n\t";
+        $code .=' * @ORM\GeneratedValue(strategy="IDENTITY")';
+        $code .= "\n\t";
+        $code .= ' */';
+        $code .= "\n\t";
+        $code .= 'private $id;';
+        $code .= "\n";
 
         foreach ($fields as $field){
             $field = explode(':', $field);
-            $code .= "\n\t";
-            $code .='/**';
-            $code .= "\n\t";
-            $code .=' * @Column('.$field[1].')';
-            $code .= "\n\t";
-            $code .= ' */';
-            $code .= "\n\t";
-            $code .= 'protected $' . $field[0].';';
-            $code .= "\n";
+            if(!is_array($field)) {
+                $code .= '';
+            } else {
+                $code .= "\n\t";
+                $code .='/**';
+                $code .= "\n\t";
+                $code .=' * @ORM\Column('.S::create($field[1])->camelize()->toAscii().')';
+                $code .= "\n\t";
+                $code .= ' */';
+                $code .= "\n\t";
+                $code .= 'protected $' . $field[0].';';
+                $code .= "\n";
+            }
         }
 
         return $code;
