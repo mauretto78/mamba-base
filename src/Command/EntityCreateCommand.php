@@ -15,6 +15,7 @@ use gossi\codegen\generator\CodeGenerator;
 use gossi\codegen\model\PhpClass;
 use gossi\codegen\model\PhpMethod;
 use gossi\codegen\model\PhpParameter;
+use gossi\codegen\model\PhpProperty;
 use Mamba\Base\BaseCommand;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -85,95 +86,105 @@ class EntityCreateCommand extends BaseCommand
     /**
      * @param $entity
      * @param null $table
+     * @param null $fields
      * @return string
      */
-    private function _getEntityCodeStart($entity, $table = null)
+    private function _getEntityCode($entity, $table = null, $fields = null)
     {
+        $class = new PhpClass();
+        $class
+            ->setName($entity)
+            ->setNamespace('Mamba\\Entity')
+            ->setDescription($this->_getEntityHeadBlockCode($entity, $table))
+            ->addUseStatement('Doctrine\\ORM\\Mapping', 'ORM')
+        ;
+        $class
+            ->setProperty(PhpProperty::create('id')
+                ->setVisibility('private')
+                ->setDescription($this->_getEntityIdHeadBlockCode())
+            );
+        foreach ($this->_getEntityFieldsArray($fields) as $key => $value) {
+            $class
+                ->setProperty(PhpProperty::create($key)
+                    ->setVisibility('private')
+                    ->setDescription('@ORM\Column("'.$value.'")')
+                )
+            ;
+            $class
+                ->setMethod(PhpMethod::create('set'.ucfirst(S::create($key)->camelize()->toAscii()))
+                    ->setDescription('set'.ucfirst(S::create($key)->camelize()->toAscii()))
+                    ->addParameter(PhpParameter::create($key))
+                    ->setBody('$this->'.$key.' = $'.$key.';')
+                )
+            ;
+            $class
+                ->setMethod(PhpMethod::create('get'.ucfirst(S::create($key)->camelize()->toAscii()))
+                    ->setDescription('get'.ucfirst(S::create($key)->camelize()->toAscii()))
+                    ->setBody('return $this->'.$key.';')
+                )
+            ;
+        }
+        $generator = new CodeGenerator();
+
         $code =  '<?php';
         $code .= "\n\n";
-        $code .= 'namespace Mamba\Entity;';
-        $code .= "\n\n";
-        $code .= 'use Doctrine\ORM\Mapping as ORM;';
-        $code .= "\n\n";
-        $code .='/**';
-        $code .= "\n";
-        $code .=' * Mamba\Entity\\'.$entity;
-        $code .= "\n";
-        $code .=' *';
-
-        if($table){
-            $code .= "\n";
-            $code .= ' * @ORM\Table(name="'.$table.'")';
-        }
-
-        $code .= "\n";
-        $code .= ' * @ORM\Entity(repositoryClass="Mamba\Repository\\'.$entity.'Repository")';
-        $code .= "\n";
-        $code .= ' */';
-        $code .= "\n\n";
-        $code .= 'class '.$entity;
-        $code .= "\n";
-        $code .= '{';
+        $code .= $generator->generate($class);
 
         return $code;
+    }
+
+    /**
+     * @param $entity
+     * @param null $table
+     * @return string
+     */
+    private function _getEntityHeadBlockCode($entity, $table = null)
+    {
+        $headBlock = 'Mamba\Entity\\'.$entity;
+        $headBlock .= "\n";
+        if($table){
+            $headBlock .= '@ORM\Table(name="'.$table.'")';
+            $headBlock .= "\n";
+        }
+        $headBlock .= '@ORM\Entity(repositoryClass="Mamba\Repository\\'.$entity.'Repository")';
+
+        return $headBlock;
+    }
+
+    public function _getEntityIdHeadBlockCode()
+    {
+        $idCode = '@ORM\Column(name="id", type="integer", nullable=false)';
+        $idCode .= "\n";
+        $idCode .= '@ORM\Id';
+        $idCode .= "\n";
+        $idCode .= '@ORM\GeneratedValue(strategy="IDENTITY")';
+
+        return $idCode;
     }
 
     /**
      * @param $fields
-     * @return null|string
+     * @return array
      */
-    private function _getEntityCodeFields($fields)
+    private function _getEntityFieldsArray($fields)
     {
+        $fieldsArray = [];
         $fields = explode('|', $fields);
 
         if(!is_array($fields)) {
-            return null;
+            return array();
         }
-
-        $code = '';
-        $code .= "\n\t";
-        $code .='/**';
-        $code .= "\n\t";
-        $code .=' * @ORM\Column(name="id", type="integer", nullable=false)';
-        $code .= "\n\t";
-        $code .=' * @ORM\Id';
-        $code .= "\n\t";
-        $code .=' * @ORM\GeneratedValue(strategy="IDENTITY")';
-        $code .= "\n\t";
-        $code .= ' */';
-        $code .= "\n\t";
-        $code .= 'private $id;';
-        $code .= "\n";
 
         foreach ($fields as $field){
             $field = explode(':', $field);
             if(!is_array($field)) {
-                $code .= '';
+                return array();
             } else {
-                $code .= "\n\t";
-                $code .='/**';
-                $code .= "\n\t";
-                $code .=' * @ORM\Column('.S::create($field[1])->camelize()->toAscii().')';
-                $code .= "\n\t";
-                $code .= ' */';
-                $code .= "\n\t";
-                $code .= 'protected $' . $field[0].';';
-                $code .= "\n";
+                $fieldsArray[$field[0]] = S::create($field[1])->camelize()->toAscii();
             }
         }
 
-        return $code;
-    }
-
-    /**
-     * @return string
-     */
-    private function _getEntityCodeEnd()
-    {
-        $code = "\n";
-        $code .= '}';
-
-        return $code;
+        return $fieldsArray;
     }
 
     /**
@@ -192,7 +203,7 @@ class EntityCreateCommand extends BaseCommand
                 ->setType('mixed')
                 ->setBody('//')
             )
-            ->addUseStatement('Doctrine\\ORM\\EntityRepository\\EntityRepository')
+            ->addUseStatement('Doctrine\\ORM\\EntityRepository')
         ;
         $generator = new CodeGenerator();
 
@@ -227,9 +238,7 @@ class EntityCreateCommand extends BaseCommand
 
         // Create Entity and Repository
         if ($newEntity = fopen($file, 'w') and $newRepo = fopen($repo, 'w')) {
-            $txt = $this->_getEntityCodeStart($entity, $table);
-            $txt .= $this->_getEntityCodeFields($fields);
-            $txt .= $this->_getEntityCodeEnd();
+            $txt = $this->_getEntityCode($entity, $table, $fields);
             fwrite($newEntity, $txt);
             fclose($newEntity);
 
