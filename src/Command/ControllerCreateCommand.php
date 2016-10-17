@@ -11,6 +11,10 @@
 
 namespace Mamba\Command;
 
+use gossi\codegen\generator\CodeGenerator;
+use gossi\codegen\model\PhpClass;
+use gossi\codegen\model\PhpMethod;
+use gossi\codegen\model\PhpParameter;
 use Mamba\Base\BaseCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -62,11 +66,19 @@ class ControllerCreateCommand extends BaseCommand
         }
     }
 
+    /**
+     * @param $controller
+     * @return S
+     */
     private function _getControllerName($controller)
     {
         return  S::create($controller)->upperCamelize();
     }
 
+    /**
+     * @param $controller
+     * @return int
+     */
     private function _createController($controller)
     {
         $controller = $this->_getControllerName($controller);
@@ -85,21 +97,28 @@ class ControllerCreateCommand extends BaseCommand
 
         // Create Controller
         if ($newController = fopen($file, 'w')) {
-            $txt = '<?php
+            $class = new PhpClass();
+            $class
+                ->setName($controller.'Controller extends BaseController')
+                ->setNamespace('Mamba\\Controller')
+                ->setDescription($controller.'Controller Class')
+                ->setMethod(PhpMethod::create('dummyAction')
+                    ->addParameter(PhpParameter::create('request'))
+                    ->setDescription('dummyAction')
+                    ->setType('Response')
+                    ->setBody('return new Response(\'dummy response\');')
+                )
+                ->addUseStatement('Mamba\\Base\\BaseController')
+                ->addUseStatement('Symfony\\Component\\HttpFoundation\\Response')
+                ->addUseStatement('Symfony\\Component\\HttpFoundation\\Request')
+            ;
+            $generator = new CodeGenerator();
 
-namespace Mamba\Controller;
+            $code = '<?php';
+            $code .= "\n\n";
+            $code .= $generator->generate($class);
 
-use Symfony\Component\HttpFoundation\Response;
-use Mamba\Base\BaseController;
-
-class '.$controller.'Controller extends BaseController
-{
-    public function dummyAction()
-    {
-        return new Response(\'dummy response\');
-    }
-}';
-            fwrite($newController, $txt);
+            fwrite($newController, $code);
             fclose($newController);
 
             return 1;
