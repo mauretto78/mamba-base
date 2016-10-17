@@ -11,6 +11,10 @@
 
 namespace Mamba\Command;
 
+use gossi\codegen\generator\CodeGenerator;
+use gossi\codegen\model\PhpClass;
+use gossi\codegen\model\PhpMethod;
+use gossi\codegen\model\PhpParameter;
 use Mamba\Base\BaseCommand;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -174,21 +178,27 @@ class EntityCreateCommand extends BaseCommand
 
     /**
      * @param $entity
-     * @return strin
+     * @return string
      */
     private function _getRepoCode($entity)
     {
+        $class = new PhpClass();
+        $class
+            ->setName($entity.'Repository extends EntityRepository')
+            ->setNamespace('Mamba\\Repository')
+            ->setDescription($entity.'Repository Class')
+            ->setMethod(PhpMethod::create('dummyMethod')
+                ->setDescription('dummyMethod')
+                ->setType('mixed')
+                ->setBody('//')
+            )
+            ->addUseStatement('Doctrine\\ORM\\EntityRepository\\EntityRepository')
+        ;
+        $generator = new CodeGenerator();
+
         $code =  '<?php';
         $code .= "\n\n";
-        $code .= 'namespace Mamba\Repository;';
-        $code .= "\n\n";
-        $code .= 'use Doctrine\ORM\EntityRepository;';
-        $code .= "\n\n";
-        $code .= 'class '.$entity.'Repository extends EntityRepository';
-        $code .= "\n";
-        $code .= '{';
-        $code .= "\n\n";
-        $code .= '}';
+        $code .= $generator->generate($class);
 
         return $code;
     }
