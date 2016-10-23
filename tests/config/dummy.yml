@@ -1,3 +1,6 @@
+imports:
+  - import/config-imported.yml
+
 app:
   name: Mamba Test
   version: 1.0.0

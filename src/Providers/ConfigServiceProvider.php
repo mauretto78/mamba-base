@@ -13,7 +13,11 @@ namespace Mamba\Providers;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Config\FileLocator;
+use Yosymfony\ConfigLoader\Config;
+use Yosymfony\ConfigLoader\Loaders\TomlLoader;
+use Yosymfony\ConfigLoader\Loaders\YamlLoader;
+use Yosymfony\ConfigLoader\Loaders\JsonLoader;
 
 /**
  * Class ConfigServiceProvider.
@@ -50,7 +54,17 @@ class ConfigServiceProvider implements ServiceProviderInterface
                         throw new \RuntimeException(sprintf('The file "%s" is not readable', $pathFile));
                     }
 
-                    $configArray[] = Yaml::parse(file_get_contents($pathFile));
+                    $locator = new FileLocator([
+                        $baseDir
+                    ]);
+
+                    $config = new Config([
+                            new TomlLoader($locator),
+                            new YamlLoader($locator),
+                            new JsonLoader($locator),
+                    ]);
+
+                    $configArray[] = $config->load($pathFile)->getArray();
                 }
 
                 $config = call_user_func_array('array_replace_recursive', $configArray);

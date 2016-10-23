@@ -47,10 +47,10 @@ class MambaTest extends \PHPUnit_Framework_TestCase
         );
         $this->app->register(new ConfigServiceProvider(), [
             'config.CacheFilePath' => __DIR__.'/../../var/cache/cachefile',
-            'config.baseDir' => __DIR__.'/../../tests',
+            'config.baseDir' => __DIR__.'/../../tests/config',
             'config.configFiles' => [
-                'config/dummy.yml',
-                'config/routing.yml',
+                'dummy.yml',
+                'routing.yml',
             ],
         ]);
         $this->app->register(new DoctrineServiceProvider(), [

@@ -13,5 +13,6 @@ class ConfigServiceProviderTest extends MambaTest
         $this->assertEquals('Mamba Test', $config['app']['name']);
         $this->assertEquals('1.0.0', $config['app']['version']);
         $this->assertEquals('www.example.com', $config['app']['url']);
+        $this->assertEquals('imported value', $config['app']['import']['key']);
     }
 }
