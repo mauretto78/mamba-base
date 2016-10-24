@@ -36,6 +36,12 @@ class MambaTest extends \PHPUnit_Framework_TestCase
         $this->app = new Application('dev');
         $this->app->setRootDir(__DIR__.'/../..');
         $this->app->setCacheDir($this->app->getRootDir().'/var/cache');
+        $this->app->setConfigFiles(
+            [
+                'dummy.yml',
+                'routing.yml',
+            ]
+        );
 
         $this->app->register(
             new ConsoleServiceProvider(),
@@ -48,10 +54,7 @@ class MambaTest extends \PHPUnit_Framework_TestCase
         $this->app->register(new ConfigServiceProvider(), [
             'config.CacheFilePath' => __DIR__.'/../../var/cache/cachefile',
             'config.baseDir' => __DIR__.'/../../tests/config',
-            'config.configFiles' => [
-                'dummy.yml',
-                'routing.yml',
-            ],
+            'config.configFiles' => $this->app->getConfigFiles(),
         ]);
         $this->app->register(new DoctrineServiceProvider(), [
             'db.options' => [

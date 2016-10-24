@@ -59,7 +59,17 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
     /**
      * @var array
      */
-    protected $providers = [];
+    protected $configFiles = [];
+
+    /**
+     * @var array
+     */
+    protected $serviceProviders = [];
+
+    /**
+     * @var array
+     */
+    protected $devServiceProviders = [];
 
     /**
      * @var array
@@ -149,6 +159,62 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
     }
 
     /**
+     * @param array $configFiles
+     */
+    public function setConfigFiles($configFiles)
+    {
+        $this->configFiles = $configFiles;
+    }
+
+    /**
+     * @param array $serviceProviders
+     */
+    public function setServiceProviders($serviceProviders)
+    {
+        foreach ($serviceProviders as $provider => $values){
+            $this->addServiceProvider($provider, $values);
+        }
+    }
+
+    /**
+     * @param array $serviceProviders
+     */
+    public function setDevServiceProviders($serviceProviders)
+    {
+        foreach ($serviceProviders as $provider => $values){
+            $this->addDevServiceProvider($provider, $values);
+        }
+    }
+
+    /**
+     * @param $provider
+     * @param array $values
+     */
+    public function addServiceProvider($provider, array $values)
+    {
+        $this->serviceProviders[] = [$provider => $values];
+    }
+
+    /**
+     * @param $provider
+     * @param array $values
+     */
+    public function addDevServiceProvider($provider, array $values)
+    {
+        $this->devServiceProviders[] = [$provider => $values];
+    }
+
+    /**
+     * @param array $commands
+     */
+    public function setCommands($commands)
+    {
+        foreach ($commands as $command){
+            $this->addCommand($command);
+        }
+    }
+
+    /**
      * @param $command
      *
      * @return mixed
@@ -222,9 +288,33 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
     /**
      * @return array
      */
+    public function getConfigFiles()
+    {
+        return $this->configFiles;
+    }
+    
+    /**
+     * @return array
+     */
     public function getProviders()
     {
         return $this->providers;
+    }
+
+    /**
+     * @return array
+     */
+    public function getServiceProviders()
+    {
+        return $this->serviceProviders;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDevServiceProviders()
+    {
+        return $this->devServiceProviders;
     }
 
     /**
@@ -252,14 +342,14 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
     }
 
     /**
-     * @param $configFiles
+     * Inits the ConfigServiceProvider.
      */
-    public function initConfig($configFiles)
+    public function initConfig()
     {
         $this->register(new \Mamba\Providers\ConfigServiceProvider(), [
             'config.CacheFilePath' => $this->getCacheFilePath(),
             'config.baseDir' => $this->getConfigDir(),
-            'config.configFiles' => $configFiles,
+            'config.configFiles' => $this->configFiles,
         ]);
     }
 
@@ -305,17 +395,17 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
 
     /**
      * Register the providers.
-     *
-     * @param $providers
      */
-    public function initProviders($providers)
+    public function initProviders()
     {
-        foreach ($providers['require'] as $provider => $values) {
-            $this->_registerProvider($provider, $values);
+        foreach ($this->serviceProviders as $serviceProvider) {
+            foreach ($serviceProvider as $provider => $values){
+                $this->_registerProvider($provider, $values);
+            }
         }
 
-        if ($this->getEnv() === 'dev' and @$providers['require-dev']) {
-            foreach ($providers['require-dev'] as $provider => $values) {
+        foreach ($this->devServiceProviders as $serviceProvider) {
+            foreach ($serviceProvider as $provider => $values){
                 $this->_registerProvider($provider, $values);
             }
         }
@@ -344,13 +434,11 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
 
     /**
      * Register the commands.
-     *
-     * @param $commands
      */
-    public function initCommands($commands)
+    public function initCommands()
     {
         if ($this->getEnv() === 'dev') {
-            foreach ($commands as $command) {
+            foreach ($this->commands as $command) {
                 $this->_registerCommand($command);
             }
         }
@@ -364,15 +452,13 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
     {
         /** @var \Knp\Console\Application $console */
         $console = $this['console'];
+        $commandInstance = new $command($this);
 
-        $commandClass = new $command($this);
-
-        if (!is_subclass_of($commandClass, 'Knp\Command\Command')) {
+        if (!is_subclass_of($command, 'Knp\Command\Command')) {
             throw new \RuntimeException('Command class '.$command.' must extends Knp\Command\Command.');
         }
 
-        $this->addCommand($commandClass);
-        $console->add($commandClass);
+        $console->add($commandInstance);
     }
 
     /**

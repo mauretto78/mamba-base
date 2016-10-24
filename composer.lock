@@ -786,12 +786,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "9061956e6ad81cc90e7f36d54f2eaa944ae74065"
+                "reference": "58219b370bd347b20d7c0f84260d12714759b2e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/9061956e6ad81cc90e7f36d54f2eaa944ae74065",
-                "reference": "9061956e6ad81cc90e7f36d54f2eaa944ae74065",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/58219b370bd347b20d7c0f84260d12714759b2e1",
+                "reference": "58219b370bd347b20d7c0f84260d12714759b2e1",
                 "shasum": ""
             },
             "require": {
@@ -840,7 +840,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2016-10-13 05:38:46"
+            "time": "2016-10-23 09:32:37"
         },
         {
             "name": "guzzlehttp/promises",
@@ -1764,12 +1764,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/form.git",
-                "reference": "ccbd64344ae88c4aa2d3d1cc0c6f27ce21c23576"
+                "reference": "8284586f217b573b4572d9cd3fdf0f43fba1ac4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/form/zipball/ccbd64344ae88c4aa2d3d1cc0c6f27ce21c23576",
-                "reference": "ccbd64344ae88c4aa2d3d1cc0c6f27ce21c23576",
+                "url": "https://api.github.com/repos/symfony/form/zipball/8284586f217b573b4572d9cd3fdf0f43fba1ac4d",
+                "reference": "8284586f217b573b4572d9cd3fdf0f43fba1ac4d",
                 "shasum": ""
             },
             "require": {
@@ -1831,7 +1831,7 @@
             ],
             "description": "Symfony Form Component",
             "homepage": "https://symfony.com",
-            "time": "2016-09-24 15:57:00"
+            "time": "2016-10-21 20:33:10"
         },
         {
             "name": "symfony/http-foundation",
@@ -3742,12 +3742,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "f3abbc0c63c0c7803db79a7398bb983e5b089f53"
+                "reference": "3d42c56f989688ad0790dcdc3c706d60748af6a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/f3abbc0c63c0c7803db79a7398bb983e5b089f53",
-                "reference": "f3abbc0c63c0c7803db79a7398bb983e5b089f53",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/3d42c56f989688ad0790dcdc3c706d60748af6a6",
+                "reference": "3d42c56f989688ad0790dcdc3c706d60748af6a6",
                 "shasum": ""
             },
             "require": {
@@ -3789,7 +3789,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-09-28 14:20:56"
+            "time": "2016-10-21 21:10:51"
         },
         {
             "name": "webmozart/assert",

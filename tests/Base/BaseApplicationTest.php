@@ -82,27 +82,41 @@ class BaseApplicationTest extends MambaTest
 
     public function testInitProviders()
     {
-        $providersToRegister = [
-            'require' => [
-                ClientServiceProvider::class => [],
+        $this->app->setServiceProviders(
+            [
                 ConfigServiceProvider::class => [],
-            ],
-        ];
+            ]
+        );
 
-        $this->app->initProviders($providersToRegister);
+        $this->app->setDevServiceProviders(
+            [
+                ClientServiceProvider::class => [],
+            ]
+        );
 
-        $providers = $this->app->getProviders();
-        $count = count($providers);
+        $this->app->initProviders();
+        $providers = $this->app->getServiceProviders();
+        $devProviders = $this->app->getDevServiceProviders();
 
-        $this->assertInstanceOf('Mamba\Providers\ClientServiceProvider', $providers[$count - 2]);
-        $this->assertInstanceOf('Mamba\Providers\ConfigServiceProvider', $providers[$count - 1]);
+        $this->assertCount(1, $providers);
+        $this->assertCount(1, $devProviders);
+        
+        foreach ($providers[0] as $provider => $values){
+            $this->assertEquals('Mamba\Providers\ConfigServiceProvider', $provider);
+        }
+
+        foreach ($devProviders[0] as $provider => $values){
+            $this->assertEquals('Mamba\Providers\ClientServiceProvider', $provider);
+        }
     }
 
     public function testInitCommands()
     {
-        $commandsToRegister = [
-            BaseCommand::class,
-        ];
+        $this->app->setCommands(
+            [
+                BaseCommand::class,
+            ]
+        );
 
         $this->app->register(new \Knp\Provider\ConsoleServiceProvider(), [
             'console.name' => 'console demo',
@@ -110,12 +124,12 @@ class BaseApplicationTest extends MambaTest
             'console.project_directory' => __DIR__,
         ]);
 
-        $this->app->initCommands($commandsToRegister);
+        $this->app->initCommands();
 
         $commands = $this->app->getCommands();
         $count = count($commands);
 
         $this->assertCount(1, $commands);
-        $this->assertInstanceOf('Mamba\Base\BaseCommand', $commands[$count - 1]);
+        $this->assertEquals('Mamba\Base\BaseCommand', $commands[$count - 1]);
     }
 }
