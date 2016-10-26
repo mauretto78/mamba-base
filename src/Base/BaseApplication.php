@@ -450,6 +450,29 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
         });
     }
 
+    /**
+     * Init Application.
+     * 
+     * @param array $providers
+     * @param array $devProviders
+     * @param array $commands
+     * @return $this
+     */
+    public function init(array $providers, array $devProviders, array $commands)
+    {
+        $this->_setEnv();
+        $this->_setDebug();
+        $this->initConfig();
+        $this->initProviders($providers);
+        $this->initDevProviders($devProviders);
+        $this->initCommands($commands);
+        $this->initLocale();
+        $this->initRouting();
+        $this->initErrorHandler();
+
+        return $this;
+    }
+
     /********************************************************************************
      * Methods to satisfy Interop\Container\ContainerInterface
      *

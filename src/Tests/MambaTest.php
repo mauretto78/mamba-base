@@ -29,7 +29,7 @@ class MambaTest extends \PHPUnit_Framework_TestCase
     protected $em;
 
     /**
-     * setUp the Application and register providers.
+     * setUp the Application and register needed providers.
      */
     public function setUp()
     {
@@ -51,34 +51,44 @@ class MambaTest extends \PHPUnit_Framework_TestCase
                 'console.project_directory' => __DIR__.'/..',
             ]
         );
-        $this->app->register(new ConfigServiceProvider(), [
-            'config.CacheFilePath' => __DIR__.'/../../var/cache/cachefile',
-            'config.baseDir' => __DIR__.'/../../tests/config',
-            'config.configFiles' => $this->app->getConfigFiles(),
-        ]);
-        $this->app->register(new DoctrineServiceProvider(), [
-            'db.options' => [
-                'driver' => 'pdo_mysql',
-                'host' => 'localhost',
-                'dbname' => 'mamba_test',
-                'user' => 'root',
-                'password' => '',
-                'charset' => 'utf8mb4',
-            ],
-        ]);
-        $this->app->register(new DoctrineOrmServiceProvider(), [
-            'orm.proxies_dir' => $this->app->getCacheDir().'/doctrine/proxies',
-            'orm.em.options' => [
-                'mappings' => [
-                    [
-                        'use_simple_annotation_reader' => false,
-                        'type' => 'annotation',
-                        'namespace' => 'Mamba\Entity',
-                        'path' => __DIR__.'/../src/Entity',
+        
+        $this->app->register(new ConfigServiceProvider(),
+            [
+                'config.CacheFilePath' => __DIR__.'/../../var/cache/cachefile',
+                'config.baseDir' => __DIR__.'/../../tests/config',
+                'config.configFiles' => $this->app->getConfigFiles(),
+            ]
+        );
+
+        $this->app->register(new DoctrineServiceProvider(),
+            [
+                'db.options' => [
+                    'driver' => 'pdo_mysql',
+                    'host' => 'localhost',
+                    'dbname' => 'mamba_test',
+                    'user' => 'root',
+                    'password' => '',
+                    'charset' => 'utf8mb4',
+                ],
+            ]
+        );
+
+        $this->app->register(new DoctrineOrmServiceProvider(),
+            [
+                'orm.proxies_dir' => $this->app->getCacheDir().'/doctrine/proxies',
+                'orm.em.options' => [
+                    'mappings' => [
+                        [
+                            'use_simple_annotation_reader' => false,
+                            'type' => 'annotation',
+                            'namespace' => 'Mamba\Entity',
+                            'path' => __DIR__.'/../src/Entity',
+                        ],
                     ],
                 ],
-            ],
-        ]);
+            ]
+        );
+
         $this->app->register(new ClientServiceProvider(), []);
     }
 
