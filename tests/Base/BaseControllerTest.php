@@ -22,4 +22,9 @@ class BaseControllerTest extends MambaTest
     {
         $this->assertInstanceOf('Mamba\Base\BaseApplication', $this->controller->getApp());
     }
+
+    public function testRenderIsAnInstanceOfTwigEnvironment()
+    {
+        $this->assertInstanceOf('\Twig_Environment', $this->controller->render('test.html.twig'));
+    }
 }

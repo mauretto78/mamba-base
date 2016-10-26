@@ -49,6 +49,9 @@ class BaseController
      */
     public function render($file, $params = array())
     {
-        return $this->app->twig->render($file, $params);
+        /** @var \Twig_Environment $twig */
+        $twig = $this->app->key('twig');
+
+        return $twig->render($file, $params);
     }
 }

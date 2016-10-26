@@ -85,21 +85,4 @@ class BaseCommand extends Command
     {
         return $this->app->getRootDir().'/src/Repository';
     }
-
-    /**
-     * @return mixed
-     */
-    protected function configure()
-    {
-    }
-
-    /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     *
-     * @return mixed
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
-    }
 }

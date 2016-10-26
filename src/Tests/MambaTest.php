@@ -10,6 +10,7 @@ use Mamba\Providers\ClientServiceProvider;
 use Knp\Command\Command;
 use Knp\Provider\ConsoleServiceProvider;
 use Silex\Provider\DoctrineServiceProvider;
+use Silex\Provider\TwigServiceProvider;
 
 class MambaTest extends \PHPUnit_Framework_TestCase
 {
@@ -88,6 +89,10 @@ class MambaTest extends \PHPUnit_Framework_TestCase
                 ],
             ]
         );
+
+        $this->app->register(new TwigServiceProvider(), [
+
+        ]);
 
         $this->app->register(new ClientServiceProvider(), []);
     }
