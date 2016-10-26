@@ -425,6 +425,96 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
     }
 
     /**
+     * Register the mailer provider.
+     */
+    public function initMailer()
+    {
+        $this->register(new \Silex\Provider\SwiftmailerServiceProvider(), [
+            'swiftmailer.options' => [
+                'host' => $this['config']['swiftmailer']['host'],
+                'port' => $this['config']['swiftmailer']['port'],
+                'username' => $this['config']['swiftmailer']['username'],
+                'password' => $this['config']['swiftmailer']['password'],
+                'encryption' => $this['config']['swiftmailer']['encryption'],
+                'auth_mode' => $this['config']['swiftmailer']['auth_mode'],
+            ],
+        ]);
+    }
+
+    /**
+     * Register the doctrine providers.
+     */
+    public function initDoctrine()
+    {
+        $this->register(new \Silex\Provider\DoctrineServiceProvider(), [
+            'db.options' => [
+                'driver' => $this['config']['database']['driver'],
+                'host' => $this['config']['database']['host'],
+                'dbname' => $this['config']['database']['dbname'],
+                'user' => $this['config']['database']['user'],
+                'password' => $this['config']['database']['password'],
+                'charset' => $this['config']['database']['charset'],
+            ],
+        ]);
+
+        $this->register(new \Dflydev\Provider\DoctrineOrm\DoctrineOrmServiceProvider(),  [
+            'orm.proxies_dir' => $this->getCacheDir().'/doctrine/proxies',
+            'orm.em.options' => [
+                'mappings' => [
+                    [
+                        'use_simple_annotation_reader' => false,
+                        'type' => 'annotation',
+                        'namespace' => 'Mamba\Entity',
+                        'path' => $this->getRootDir().'/../src/Entity',
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * Register the client providers.
+     */
+    public function initClient()
+    {
+        $this->register(new \Mamba\Providers\ClientServiceProvider(), [
+            'guzzle.base_uri' => $this['config']['guzzle']['base_uri'],
+            'guzzle.timeout' => $this['config']['guzzle']['timeout'],
+            'guzzle.debug' => false,
+            'guzzle.request_options' => [
+                'headers' => [
+                    'User-Agent' => $this['config']['guzzle']['user-agent'],
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * Register the twig provider.
+     */
+    public function initTwig()
+    {
+        $this->register(new \Silex\Provider\TwigServiceProvider(), [
+            'twig.path' => $this->getViewDir(),
+            'twig.options' => [
+                'auto_reload' => $this['debug'],
+                'cache' => $this['debug'] ? false : $this->getCacheDir().'/twig',
+            ],
+        ]);
+        $this['twig']->getExtension('core')->setTimezone($this['config']['site']['timezone']);
+    }
+
+    /**
+     * @param array $extensions
+     */
+    public function addTwigExtensions($extensions)
+    {
+        foreach ($extensions as $extension){
+            $this['twig']->addExtension($extension);
+        }
+    }
+
+    /**
      * Custom error handlers.
      */
     public function initErrorHandler()
@@ -448,29 +538,6 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
                     return $this['twig']->render('errors/generic.html.twig', []);
             }
         });
-    }
-
-    /**
-     * Init Application.
-     * 
-     * @param array $providers
-     * @param array $devProviders
-     * @param array $commands
-     * @return $this
-     */
-    public function init(array $providers, array $devProviders, array $commands)
-    {
-        $this->_setEnv();
-        $this->_setDebug();
-        $this->initConfig();
-        $this->initProviders($providers);
-        $this->initDevProviders($devProviders);
-        $this->initCommands($commands);
-        $this->initLocale();
-        $this->initRouting();
-        $this->initErrorHandler();
-
-        return $this;
     }
 
     /********************************************************************************
