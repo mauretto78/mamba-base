@@ -72,6 +72,12 @@ class BaseApplicationTest extends MambaTest
         $this->assertEquals($this->app->getViewDir(), 'viewdir');
     }
 
+    public function testEmInstance()
+    {
+        $this->setEm();
+        $this->assertInstanceOf('Doctrine\ORM\EntityManager', $this->em);
+    }
+
     public function testInitRouting()
     {
         $this->app->initRouting();

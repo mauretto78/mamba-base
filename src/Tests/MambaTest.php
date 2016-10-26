@@ -106,11 +106,11 @@ class MambaTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param EntityManager $em
+     * Sets the em.
      */
-    public function setEm($em)
+    public function setEm()
     {
-        $this->em = $em;
+        $this->em = $this->app->key('orm.em');
     }
     
     /**

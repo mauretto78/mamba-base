@@ -12,6 +12,7 @@
 namespace Mamba\Base\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
+use Mamba\Base\BaseController;
 
 class DummyController extends BaseController
 {
