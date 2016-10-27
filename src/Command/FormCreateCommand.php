@@ -16,6 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Stringy\Stringy as S;
 
 class FormCreateCommand extends BaseCommand
 {
@@ -30,6 +31,7 @@ class FormCreateCommand extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $helper = $this->getHelper('question');
+        $fields = [];
 
         $question = new Question('<question>Please enter the name of the Form:</question> ', 'Acme');
         $question->setValidator(function ($value) {
@@ -41,18 +43,37 @@ class FormCreateCommand extends BaseCommand
         });
         $form = $helper->ask($input, $output, $question);
 
+        // Ask for fields
         $field = new Question('<question>Please enter field:</question> ', null);
+        $fields[] = $helper->ask($input, $output, $field);
 
-        $question = new ConfirmationQuestion(
-            'Have you finished?',
-            false,
-            '/^(y|j)/i'
-        );
+        // Infinite loop
+        while(1 === 1){
+            $question = new ConfirmationQuestion('Another fields?', false);
 
-        if (!$helper->ask($input, $output, $question)) {
-            return;
-        } else {
-            return $field;
+            if (!$confirm = $helper->ask($input, $output, $question)) {
+                $this->_createForm($form, $fields);
+
+                return;
+            } else {
+                $field = new Question('<question>Please enter field:</question> ', null);
+
+                $fields[] = $helper->ask($input, $output, $field);
+            }
         }
+    }
+
+    /**
+     * @param $form
+     * @return S
+     */
+    private function _getFormName($form)
+    {
+        return  S::create($form)->upperCamelize();
+    }
+
+    private function _createForm($form, $fields = null)
+    {
+        var_dump($fields);
     }
 }
