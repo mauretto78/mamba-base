@@ -153,12 +153,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/annotations.git",
-                "reference": "e1dd28bbb27ab6fc1636575ec0b83465d2b8f0ed"
+                "reference": "757a870a60b979059035d872d9f6ec700cd05fb3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/annotations/zipball/e1dd28bbb27ab6fc1636575ec0b83465d2b8f0ed",
-                "reference": "e1dd28bbb27ab6fc1636575ec0b83465d2b8f0ed",
+                "url": "https://api.github.com/repos/doctrine/annotations/zipball/757a870a60b979059035d872d9f6ec700cd05fb3",
+                "reference": "757a870a60b979059035d872d9f6ec700cd05fb3",
                 "shasum": ""
             },
             "require": {
@@ -213,7 +213,7 @@
                 "docblock",
                 "parser"
             ],
-            "time": "2016-10-24 11:59:51"
+            "time": "2016-10-26 23:29:21"
         },
         {
             "name": "doctrine/cache",
@@ -221,12 +221,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "a25f5386794230c62911fbe2778d0c21050ec809"
+                "reference": "6c1b03f643fc4c388318dc3d754555c41a1cf732"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/a25f5386794230c62911fbe2778d0c21050ec809",
-                "reference": "a25f5386794230c62911fbe2778d0c21050ec809",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/6c1b03f643fc4c388318dc3d754555c41a1cf732",
+                "reference": "6c1b03f643fc4c388318dc3d754555c41a1cf732",
                 "shasum": ""
             },
             "require": {
@@ -282,7 +282,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2016-10-26 10:24:47"
+            "time": "2016-10-26 23:08:41"
         },
         {
             "name": "doctrine/collections",
@@ -676,12 +676,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "26cf90e1c513305e1cc6529e4496130a7f0c6dcf"
+                "reference": "56741a3fee8b796cc6cc4b97485d12c02da1faf2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/26cf90e1c513305e1cc6529e4496130a7f0c6dcf",
-                "reference": "26cf90e1c513305e1cc6529e4496130a7f0c6dcf",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/56741a3fee8b796cc6cc4b97485d12c02da1faf2",
+                "reference": "56741a3fee8b796cc6cc4b97485d12c02da1faf2",
                 "shasum": ""
             },
             "require": {
@@ -747,7 +747,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2016-10-25 03:56:54"
+            "time": "2016-10-27 00:11:19"
         },
         {
             "name": "gossi/docblock",
@@ -2012,12 +2012,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-kernel.git",
-                "reference": "244cdb63bf1f2dd32bd4767f24c914fab5304247"
+                "reference": "67992ddbd632f1d0f4497814f6182c07b250c5e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/244cdb63bf1f2dd32bd4767f24c914fab5304247",
-                "reference": "244cdb63bf1f2dd32bd4767f24c914fab5304247",
+                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/67992ddbd632f1d0f4497814f6182c07b250c5e8",
+                "reference": "67992ddbd632f1d0f4497814f6182c07b250c5e8",
                 "shasum": ""
             },
             "require": {
@@ -2086,7 +2086,7 @@
             ],
             "description": "Symfony HttpKernel Component",
             "homepage": "https://symfony.com",
-            "time": "2016-10-25 13:27:26"
+            "time": "2016-10-27 04:11:23"
         },
         {
             "name": "symfony/inflector",

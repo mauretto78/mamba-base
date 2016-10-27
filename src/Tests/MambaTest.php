@@ -83,7 +83,7 @@ class MambaTest extends \PHPUnit_Framework_TestCase
                             'use_simple_annotation_reader' => false,
                             'type' => 'annotation',
                             'namespace' => 'Mamba\Entity',
-                            'path' => __DIR__.'/../src/Entity',
+                            'path' => __DIR__.'/../Entity',
                         ],
                     ],
                 ],
@@ -91,7 +91,7 @@ class MambaTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->app->register(new TwigServiceProvider(), [
-
+            'twig.path' => __DIR__.'/../Resources/views/',
         ]);
 
         $this->app->register(new ClientServiceProvider(), []);

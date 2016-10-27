@@ -23,8 +23,26 @@ class BaseControllerTest extends MambaTest
         $this->assertInstanceOf('Mamba\Base\BaseApplication', $this->controller->getApp());
     }
 
-    public function testRenderIsAnInstanceOfTwigEnvironment()
+    public function testViewIsAnInstanceOfTwigEnvironment()
     {
-        $this->assertInstanceOf('\Twig_Environment', $this->controller->render('test.html.twig'));
+        $this->assertInstanceOf('\Twig_Environment', $this->controller->getView());
+    }
+
+    public function testRenderView()
+    {
+        $view = $this->controller->render('base.html.twig');
+
+        $html = '<!doctype html>' . PHP_EOL;
+        $html .= '<html lang="en">'. PHP_EOL;
+        $html .= '<head>'. PHP_EOL;
+        $html .= '    <meta charset="UTF-8">'. PHP_EOL;
+        $html .= '    <title>Mamba</title>'. PHP_EOL;
+        $html .= '</head>'. PHP_EOL;
+        $html .= '<body>'. PHP_EOL;
+        $html .= '    Silence is golden.'. PHP_EOL;
+        $html .= '</body>'. PHP_EOL;
+        $html .= '</html>';
+
+        $this->assertContains($view, $html);
     }
 }

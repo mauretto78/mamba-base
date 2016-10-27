@@ -10,6 +10,31 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class EntityCreateAndDeleteCommandTest extends MambaTest
 {
+
+    public function testDeletingNotWritableEntity()
+    {
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
+
+    public function testDeletingNotExistingEntity()
+    {
+        $this->setCommand(new EntityDeleteCommand($this->app));
+        $commandTester = new CommandTester($this->command);
+
+        /** @var QuestionHelper $helper */
+        $helper = $this->command->getHelper('question');
+
+        // 1. Create Controller
+        $helper->setInputStream($this->getInputStream('NotExistingCommand'));
+        $commandTester->execute([
+
+        ]);
+        $output = $commandTester->getDisplay();
+        $this->assertContains('NotExistingCommand does not exists.', $output);
+    }
+
     public function testExecute()
     {
         // 1. Create Entity

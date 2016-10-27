@@ -10,6 +10,30 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class ControllerCreateAndDeleteCommandTest extends MambaTest
 {
+    public function testDeletingNotWritableController()
+    {
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
+
+    public function testDeletingNotExistingController()
+    {
+        $this->setCommand(new ControllerDeleteCommand($this->app));
+        $commandTester = new CommandTester($this->command);
+
+        /** @var QuestionHelper $helper */
+        $helper = $this->command->getHelper('question');
+
+        // 1. Create Controller
+        $helper->setInputStream($this->getInputStream('NotExistingController'));
+        $commandTester->execute([
+
+        ]);
+        $output = $commandTester->getDisplay();
+        $this->assertContains('NotExistingController does not exists.', $output);
+    }
+
     public function testExecute()
     {
         $this->setCommand(new ControllerCreateCommand($this->app));

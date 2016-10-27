@@ -24,6 +24,11 @@ class BaseController
     protected $app;
 
     /**
+     * @var \Twig_Environment
+     */
+    protected $view;
+
+    /**
      * Set the application class to the controller.
      *
      * @param Container $app
@@ -42,6 +47,14 @@ class BaseController
     }
 
     /**
+     * @return \Twig_Environment
+     */
+    public function getView()
+    {
+        return $this->app->key('twig');
+    }
+
+    /**
      * @param $file
      * @param array $params
      *
@@ -49,9 +62,6 @@ class BaseController
      */
     public function render($file, $params = array())
     {
-        /** @var \Twig_Environment $twig */
-        $twig = $this->app->key('twig');
-
-        return $twig->render($file, $params);
+        return $this->getView()->render($file, $params);
     }
 }

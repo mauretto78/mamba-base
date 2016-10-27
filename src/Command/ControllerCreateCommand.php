@@ -55,12 +55,8 @@ class ControllerCreateCommand extends BaseCommand
             case 1:
                 $output->writeln('<info>Controller '.$this->_getControllerName($controller).' was successfully created.</info>');
                 break;
-
+            
             case 2:
-                $output->writeln('<error>Controller \Mamba\Controller\\'.$this->_getControllerName($controller).' already exists.</error>');
-                break;
-
-            case 3:
                 $output->writeln('<error>File src/Controller/'.$this->_getControllerName($controller).'Controller.php already exists.</error>');
                 break;
         }
@@ -87,11 +83,6 @@ class ControllerCreateCommand extends BaseCommand
 
         // Duplicate file
         if (file_exists($file)) {
-            return 3;
-        }
-
-        // Duplicate Class
-        if (class_exists($class)) {
             return 2;
         }
 
