@@ -85,4 +85,12 @@ class BaseCommand extends Command
     {
         return $this->app->getRootDir().'/src/Repository';
     }
+
+    /**
+     * @return string
+     */
+    public function getFormDir()
+    {
+        return $this->app->getRootDir().'/src/Type';
+    }
 }
