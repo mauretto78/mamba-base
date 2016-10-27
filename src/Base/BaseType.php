@@ -21,6 +21,11 @@ use Symfony\Component\Form\FormFactory;
 abstract class BaseType implements BaseTypeInterface
 {
     /**
+     * @var string
+     */
+    private $name;
+
+    /**
      * @var Container
      */
     protected $app;
@@ -68,5 +73,21 @@ abstract class BaseType implements BaseTypeInterface
     public function getErrors()
     {
         return $this->errors;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
     }
 }

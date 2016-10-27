@@ -21,6 +21,7 @@
         "knplabs/console-service-provider": "^2.0",
         "silex/silex": "~2.0",
         "symfony/form": "^3.1",
+        "symfony/validator": "^3.1",
         "mauretto78/config-loader": "1.*@dev",
         "twig/twig": "^1.24",
         "twig/extensions": "^1.3"

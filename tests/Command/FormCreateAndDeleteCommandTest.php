@@ -37,6 +37,71 @@ class FormCreateAndDeleteCommandTest extends MambaTest
 
     public function testExecute()
     {
+        // 1. Create Entity
+        $this->setCommand(new FormCreateCommand($this->app));
+        $commandTester = new CommandTester($this->command);
 
+        /** @var QuestionHelper $helper */
+        $helper = $this->command->getHelper('question');
+        $helper->setInputStream($this->getInputStream(
+            "Acme\n"
+            . "first name\n"
+            . "0\n"
+            . "y\n"
+            . "email\n"
+            . "1\n"
+            . "y\n"
+            . "select\n"
+            . "2\n"
+            . "y\n"
+            . "number\n"
+            . "3\n"
+            . "y\n"
+            . "note\n"
+            . "4\n"
+            . "n\n"
+        ));
+        $commandTester->execute([]);
+        $output = $commandTester->getDisplay();
+        $this->assertContains('Form AcmeType was successfully created.', $output);
+
+        // 2. Says Form exists
+        $this->setCommand(new FormCreateCommand($this->app));
+        $commandTester = new CommandTester($this->command);
+
+        /** @var QuestionHelper $helper */
+        $helper = $this->command->getHelper('question');
+        $helper->setInputStream($this->getInputStream(
+            "Acme\n"
+            . "first name\n"
+            . "0\n"
+            . "y\n"
+            . "email\n"
+            . "1\n"
+            . "y\n"
+            . "select\n"
+            . "2\n"
+            . "y\n"
+            . "number\n"
+            . "3\n"
+            . "y\n"
+            . "note\n"
+            . "4\n"
+            . "n\n"
+        ));
+        $commandTester->execute([]);
+        $output = $commandTester->getDisplay();
+        $this->assertContains('File src/Type/AcmeType.php already exists.', $output);
+
+        // 3. Delete Form
+        $this->setCommand(new FormDeleteCommand($this->app));
+        $commandTester = new CommandTester($this->command);
+
+        /** @var QuestionHelper $helper */
+        $helper = $this->command->getHelper('question');
+        $helper->setInputStream($this->getInputStream('AcmeType'));
+        $commandTester->execute([]);
+        $output = $commandTester->getDisplay();
+        $this->assertContains('Form AcmeType was successfully deleted.', $output);
     }
 }
