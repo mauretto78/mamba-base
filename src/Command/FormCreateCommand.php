@@ -84,10 +84,6 @@ class FormCreateCommand extends BaseCommand
                         break;
 
                     case 2:
-                        $output->writeln('<error>Form \Mamba\Type\\'.$form.'Type already exists.</error>');
-                        break;
-
-                    case 3:
                         $output->writeln('<error>File src/Type/'.$form.'Type.php already exists.</error>');
                         break;
                 }
@@ -119,11 +115,6 @@ class FormCreateCommand extends BaseCommand
 
         // Duplicate file
         if (file_exists($file)) {
-            return 3;
-        }
-
-        // Duplicate Class
-        if (class_exists($class)) {
             return 2;
         }
 

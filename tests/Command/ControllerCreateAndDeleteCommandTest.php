@@ -21,50 +21,6 @@ class ControllerCreateAndDeleteCommandTest extends MambaTest
         );
     }
 
-    public function testCreatingWrongNameControllerClass()
-    {
-        //create a fake Controller
-        $file = $this->app->getRootDir().'/src/Controller/WrongController.php';
-
-        if ($newController = fopen($file, 'w')) {
-            $class = new PhpClass();
-            $class
-                ->setName('WrongNameController extends BaseController')
-                ->setNamespace('Mamba\\Controller')
-                ->setDescription('WrongNameController Class')
-                ->setMethod(PhpMethod::create('dummyAction')
-                    ->addParameter(PhpParameter::create('request'))
-                    ->setDescription('dummyAction')
-                    ->setType('Response')
-                    ->setBody('return new Response(\'dummy response\');')
-                )
-                ->addUseStatement('Mamba\\Base\\BaseController')
-                ->addUseStatement('Symfony\\Component\\HttpFoundation\\Response')
-                ->addUseStatement('Symfony\\Component\\HttpFoundation\\Request')
-            ;
-            $generator = new CodeGenerator();
-
-            $code = '<?php';
-            $code .= "\n\n";
-            $code .= $generator->generate($class);
-
-            fwrite($newController, $code);
-            fclose($newController);
-        }
-
-        $this->setCommand(new ControllerCreateCommand($this->app));
-        $commandTester = new CommandTester($this->command);
-
-        /** @var QuestionHelper $helper */
-        $helper = $this->command->getHelper('question');
-
-        $helper->setInputStream($this->getInputStream('WrongName'));
-        $commandTester->execute([
-
-        ]);
-        echo $output = $commandTester->getDisplay();
-    }
-
     public function testDeletingNotExistingControllerFile()
     {
         $this->setCommand(new ControllerDeleteCommand($this->app));

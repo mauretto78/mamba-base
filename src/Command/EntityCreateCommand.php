@@ -65,10 +65,6 @@ class EntityCreateCommand extends BaseCommand
                 break;
 
             case 2:
-                $output->writeln('<error>Entity \Mamba\Entity\\'.$entity.' already exists.</error>');
-                break;
-
-            case 3:
                 $output->writeln('<error>File src/Entity/'.$entity.'.php already exists.</error>');
                 break;
         }
@@ -228,11 +224,6 @@ class EntityCreateCommand extends BaseCommand
 
         // Duplicate file
         if (file_exists($file)) {
-            return 3;
-        }
-
-        // Duplicate Class
-        if (class_exists($class)) {
             return 2;
         }
 

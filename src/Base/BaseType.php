@@ -13,6 +13,7 @@ namespace Mamba\Base;
 
 use Mamba\Base\BaseApplication as Container;
 use Mamba\Contracts\BaseTypeInterface;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 
 /**
@@ -68,11 +69,20 @@ abstract class BaseType implements BaseTypeInterface
     }
 
     /**
+     * @param FormError $error
+     * @return $this|\Symfony\Component\Form\FormInterface
+     */
+    public function addError(FormError $error)
+    {
+        return $this->getForm()->addError($error);
+    }
+
+    /**
      * @return array
      */
     public function getErrors()
     {
-        return $this->errors;
+        return $this->getForm()->getErrors();
     }
 
     /**
