@@ -5,6 +5,7 @@ namespace Mamba\Tests;
 use Doctrine\ORM\EntityManager;
 use Dflydev\Provider\DoctrineOrm\DoctrineOrmServiceProvider;
 use Mamba\Base\BaseApplication as Application;
+use Mamba\Providers\ApiCreatorServiceProvider;
 use Mamba\Providers\ConfigServiceProvider;
 use Mamba\Providers\ClientServiceProvider;
 use Knp\Command\Command;
@@ -52,7 +53,7 @@ class MambaTest extends \PHPUnit_Framework_TestCase
                 'console.project_directory' => __DIR__.'/..',
             ]
         );
-        
+
         $this->app->register(new ConfigServiceProvider(),
             [
                 'config.CacheFilePath' => __DIR__.'/../../var/cache/cachefile',
@@ -95,6 +96,8 @@ class MambaTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $this->app->register(new ClientServiceProvider(), []);
+
+        $this->app->register(new ApiCreatorServiceProvider(), []);
     }
 
     /**
@@ -117,7 +120,7 @@ class MambaTest extends \PHPUnit_Framework_TestCase
     {
         $this->em = $this->app->key('orm.em');
     }
-    
+
     /**
      * @param $input
      *

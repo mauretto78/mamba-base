@@ -10,7 +10,6 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class FormCreateAndDeleteCommandTest extends MambaTest
 {
-
     public function testDeletingNotWritableForm()
     {
         $this->markTestIncomplete(
@@ -45,21 +44,21 @@ class FormCreateAndDeleteCommandTest extends MambaTest
         $helper = $this->command->getHelper('question');
         $helper->setInputStream($this->getInputStream(
             "Acme\n"
-            . "first name\n"
-            . "0\n"
-            . "y\n"
-            . "email\n"
-            . "1\n"
-            . "y\n"
-            . "select\n"
-            . "2\n"
-            . "y\n"
-            . "number\n"
-            . "3\n"
-            . "y\n"
-            . "note\n"
-            . "4\n"
-            . "n\n"
+            ."first name\n"
+            ."0\n"
+            ."y\n"
+            ."email\n"
+            ."1\n"
+            ."y\n"
+            ."select\n"
+            ."2\n"
+            ."y\n"
+            ."number\n"
+            ."3\n"
+            ."y\n"
+            ."note\n"
+            ."4\n"
+            ."n\n"
         ));
         $commandTester->execute([]);
         $output = $commandTester->getDisplay();
@@ -73,21 +72,21 @@ class FormCreateAndDeleteCommandTest extends MambaTest
         $helper = $this->command->getHelper('question');
         $helper->setInputStream($this->getInputStream(
             "Acme\n"
-            . "first name\n"
-            . "0\n"
-            . "y\n"
-            . "email\n"
-            . "1\n"
-            . "y\n"
-            . "select\n"
-            . "2\n"
-            . "y\n"
-            . "number\n"
-            . "3\n"
-            . "y\n"
-            . "note\n"
-            . "4\n"
-            . "n\n"
+            ."first name\n"
+            ."0\n"
+            ."y\n"
+            ."email\n"
+            ."1\n"
+            ."y\n"
+            ."select\n"
+            ."2\n"
+            ."y\n"
+            ."number\n"
+            ."3\n"
+            ."y\n"
+            ."note\n"
+            ."4\n"
+            ."n\n"
         ));
         $commandTester->execute([]);
         $output = $commandTester->getDisplay();

@@ -52,7 +52,7 @@ class EntityCreateCommand extends BaseCommand
         $table = $helper->ask($input, $output, $question2);
 
         // Infinite loop
-        while(1 === 1){
+        while (1 === 1) {
 
             // Ask for fields and types
             $field = new Question('<question>Field name:</question> ', null);
@@ -116,6 +116,7 @@ class EntityCreateCommand extends BaseCommand
 
     /**
      * @param $entity
+     *
      * @return S
      */
     private function _getEntityName($entity)
@@ -127,6 +128,7 @@ class EntityCreateCommand extends BaseCommand
      * @param $entity
      * @param null $table
      * @param null $fields
+     *
      * @return string
      */
     private function _getEntityCode($entity, $table = null, $fields = null)
@@ -144,13 +146,12 @@ class EntityCreateCommand extends BaseCommand
                 ->setDescription($this->_getEntityIdHeadBlockCode())
             );
         foreach ($fields as $key => $value) {
-
-            $underscoredKey =  S::create($key)->underscored()->toAscii();
-            $camelizedKey =  S::create($key)->camelize()->toAscii();
-            $ucamelizedKey =  S::create($key)->upperCamelize()->toAscii();
+            $underscoredKey = S::create($key)->underscored()->toAscii();
+            $camelizedKey = S::create($key)->camelize()->toAscii();
+            $ucamelizedKey = S::create($key)->upperCamelize()->toAscii();
 
             $class
-                ->setProperty(PhpProperty::create((string)$underscoredKey)
+                ->setProperty(PhpProperty::create((string) $underscoredKey)
                     ->setVisibility('private')
                     ->setDescription('@ORM\Column(name="'.$underscoredKey.'", type="'.$value['type'].'", nullable='.$value['nullable'].')')
                 )
@@ -171,7 +172,7 @@ class EntityCreateCommand extends BaseCommand
         }
         $generator = new CodeGenerator();
 
-        $code =  '<?php';
+        $code = '<?php';
         $code .= "\n\n";
         $code .= $generator->generate($class);
 
@@ -181,13 +182,14 @@ class EntityCreateCommand extends BaseCommand
     /**
      * @param $entity
      * @param null $table
+     *
      * @return string
      */
     private function _getEntityHeadBlockCode($entity, $table = null)
     {
         $headBlock = 'Mamba\Entity\\'.$entity;
         $headBlock .= "\n";
-        if($table){
+        if ($table) {
             $headBlock .= '@ORM\Table(name="'.$table.'")';
             $headBlock .= "\n";
         }
@@ -209,6 +211,7 @@ class EntityCreateCommand extends BaseCommand
 
     /**
      * @param $entity
+     *
      * @return string
      */
     private function _getRepoCode($entity)
@@ -227,7 +230,7 @@ class EntityCreateCommand extends BaseCommand
         ;
         $generator = new CodeGenerator();
 
-        $code =  '<?php';
+        $code = '<?php';
         $code .= "\n\n";
         $code .= $generator->generate($class);
 
@@ -237,6 +240,7 @@ class EntityCreateCommand extends BaseCommand
     /**
      * @param $entity
      * @param null $table
+     *
      * @return int
      */
     private function _createEntity($entity, $table = null, $fields = null)

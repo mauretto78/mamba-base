@@ -365,7 +365,7 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
      */
     public function initDevProviders($providers)
     {
-        if($this->getEnv() === 'dev'){
+        if ($this->getEnv() === 'dev') {
             foreach ($providers as $provider => $values) {
                 $this->devServiceProviders[] = new $provider();
                 $this->_registerProvider($provider, $values);

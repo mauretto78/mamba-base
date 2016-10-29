@@ -64,6 +64,7 @@ class ControllerCreateCommand extends BaseCommand
 
     /**
      * @param $controller
+     *
      * @return S
      */
     private function _getControllerName($controller)
@@ -73,6 +74,7 @@ class ControllerCreateCommand extends BaseCommand
 
     /**
      * @param $controller
+     *
      * @return int
      */
     private function _createController($controller)

@@ -8,9 +8,7 @@ use Silex\Provider\FormServiceProvider;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class BaseTypeTest extends MambaTest
 {
@@ -56,7 +54,7 @@ class BaseTypeTest extends MambaTest
     {
         $this->assertInstanceOf('Symfony\Component\Form\FormView', $this->type->createView());
     }
-    
+
     public function testSubmittingForm()
     {
         $formData = [

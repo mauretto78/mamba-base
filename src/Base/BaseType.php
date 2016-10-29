@@ -34,7 +34,7 @@ abstract class BaseType implements BaseTypeInterface
      * @var FormFactory
      */
     protected $factory;
-    
+
     /**
      * BaseType constructor.
      *

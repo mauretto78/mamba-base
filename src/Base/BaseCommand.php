@@ -11,8 +11,6 @@
 
 namespace Mamba\Base;
 
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Mamba\Base\BaseApplication as Container;
 use Knp\Command\Command;
 

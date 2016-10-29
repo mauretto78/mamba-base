@@ -48,7 +48,7 @@ class FormCreateCommand extends BaseCommand
         $form = $helper->ask($input, $output, $question);
 
         // Infinite loop
-        while(1 === 1){
+        while (1 === 1) {
 
             // Ask for fields and types
             $field = new Question('<question>Please enter field:</question> ', null);
@@ -71,7 +71,7 @@ class FormCreateCommand extends BaseCommand
 
             if (!$confirm = $helper->ask($input, $output, $question)) {
                 $createForm = $this->_createForm($form, $fields);
-                
+
                 switch ($createForm) {
                     case 0:
                         $output->writeln('<error>Error creating form '.$form.'Type.</error>');
@@ -93,6 +93,7 @@ class FormCreateCommand extends BaseCommand
 
     /**
      * @param $form
+     *
      * @return S
      */
     private function _getFormName($form)
@@ -103,6 +104,7 @@ class FormCreateCommand extends BaseCommand
     /**
      * @param $form
      * @param array $fields
+     *
      * @return int
      */
     private function _createForm($form, $fields = [])
@@ -131,6 +133,7 @@ class FormCreateCommand extends BaseCommand
     /**
      * @param $form
      * @param $fields
+     *
      * @return string
      */
     private function _getFormCode($form, $fields)
@@ -163,7 +166,7 @@ class FormCreateCommand extends BaseCommand
         ;
         $generator = new CodeGenerator();
 
-        $code =  '<?php';
+        $code = '<?php';
         $code .= "\n\n";
         $code .= $generator->generate($class);
 
@@ -173,6 +176,7 @@ class FormCreateCommand extends BaseCommand
     /**
      * @param $form
      * @param $fields
+     *
      * @return string
      */
     private function _getFieldsCode($form, $fields)
@@ -181,7 +185,7 @@ class FormCreateCommand extends BaseCommand
         $body .= PHP_EOL;
         $body .= PHP_EOL;
         $body .= '$form = $this->factory->createBuilder(FormType::class)';
-        foreach ($fields as $key => $value){
+        foreach ($fields as $key => $value) {
             $body .= PHP_EOL;
             $body .= "\t".'->add(\''.$key.'\', '.$value.'Type::class, [';
             $body .= "\n\t\t".'\'label\' => \''.$key.'\',';

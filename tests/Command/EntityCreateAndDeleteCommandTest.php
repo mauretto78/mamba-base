@@ -10,7 +10,6 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class EntityCreateAndDeleteCommandTest extends MambaTest
 {
-
     public function testDeletingNotWritableEntity()
     {
         $this->markTestIncomplete(
@@ -45,23 +44,23 @@ class EntityCreateAndDeleteCommandTest extends MambaTest
         $helper = $this->command->getHelper('question');
         $helper->setInputStream($this->getInputStream(
             "Acme\n"
-            . "acme\n"
-            . "first name\n"
-            . "0\n"
-            . "0\n"
-            . "y\n"
-            . "is integer\n"
-            . "1\n"
-            . "1\n"
-            . "y\n"
-            . "is boolean\n"
-            . "4\n"
-            . "1\n"
-            . "y\n"
-            . "text\n"
-            . "10\n"
-            . "1\n"
-            . "n\n"
+            ."acme\n"
+            ."first name\n"
+            ."0\n"
+            ."0\n"
+            ."y\n"
+            ."is integer\n"
+            ."1\n"
+            ."1\n"
+            ."y\n"
+            ."is boolean\n"
+            ."4\n"
+            ."1\n"
+            ."y\n"
+            ."text\n"
+            ."10\n"
+            ."1\n"
+            ."n\n"
         ));
         $commandTester->execute([]);
         $output = $commandTester->getDisplay();
@@ -75,23 +74,23 @@ class EntityCreateAndDeleteCommandTest extends MambaTest
         $helper = $this->command->getHelper('question');
         $helper->setInputStream($this->getInputStream(
             "Acme\n"
-            . "acme\n"
-            . "first name\n"
-            . "0\n"
-            . "0\n"
-            . "y\n"
-            . "a type of int\n"
-            . "1\n"
-            . "1\n"
-            . "y\n"
-            . "a type of bool\n"
-            . "4\n"
-            . "1\n"
-            . "y\n"
-            . "text\n"
-            . "10\n"
-            . "1\n"
-            . "n\n"
+            ."acme\n"
+            ."first name\n"
+            ."0\n"
+            ."0\n"
+            ."y\n"
+            ."a type of int\n"
+            ."1\n"
+            ."1\n"
+            ."y\n"
+            ."a type of bool\n"
+            ."4\n"
+            ."1\n"
+            ."y\n"
+            ."text\n"
+            ."10\n"
+            ."1\n"
+            ."n\n"
         ));
         $commandTester->execute([]);
         $output = $commandTester->getDisplay();

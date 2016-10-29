@@ -55,7 +55,7 @@ class ConfigServiceProvider implements ServiceProviderInterface
                     }
 
                     $locator = new FileLocator([
-                        $baseDir
+                        $baseDir,
                     ]);
 
                     $config = new Config([
