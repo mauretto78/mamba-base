@@ -74,7 +74,7 @@ class ApiCreateCommand extends BaseCommand
         $file = $this->getEntityDir().'/'.$entity.'.php';
 
         // Check the file
-        if (!file_exists($file) and !file_exists($repo)) {
+        if (!file_exists($file)) {
             return 2;
         }
 
