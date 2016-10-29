@@ -17,10 +17,11 @@ use gossi\codegen\model\PhpMethod;
 use gossi\codegen\model\PhpParameter;
 use gossi\codegen\model\PhpProperty;
 use Mamba\Base\BaseCommand;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 use Stringy\Stringy as S;
 
 class EntityCreateCommand extends BaseCommand
@@ -50,23 +51,66 @@ class EntityCreateCommand extends BaseCommand
         $question2 = new Question('<question>Please enter the name of the SQL table:</question> ', null);
         $table = $helper->ask($input, $output, $question2);
 
-        $question3 = new Question('<question>Please enter fields:</question> ', null);
-        $fields = $helper->ask($input, $output, $question3);
+        // Infinite loop
+        while(1 === 1){
 
-        $createEntity = $this->_createEntity($entity, $table, $fields);
+            // Ask for fields and types
+            $field = new Question('<question>Field name:</question> ', null);
+            $type = new ChoiceQuestion(
+                'Please select field type:',
+                [
+                    'string',
+                    'integer',
+                    'smallint',
+                    'bigint',
+                    'boolean',
+                    'decimal',
+                    'date',
+                    'time',
+                    'datetime',
+                    'datetimetz',
+                    'text',
+                    'float',
+                    'blob',
+                ],
+                0
+            );
+            $nullable = new ChoiceQuestion(
+                'Is nullable?',
+                [
+                    'true',
+                    'false',
+                ],
+                0
+            );
+            $type->setErrorMessage('Type %s is invalid.');
+            $fields[$helper->ask($input, $output, $field)] = [
+                'type' => $helper->ask($input, $output, $type),
+                'nullable' => $helper->ask($input, $output, $nullable),
+            ];
 
-        switch ($createEntity) {
-            case 0:
-                $output->writeln('<error>Error creating entity '.$entity.'.</error>');
-                break;
+            // confirmation question
+            $confirmationQuestion = new ConfirmationQuestion('Another fields?', false);
 
-            case 1:
-                $output->writeln('<info>Entity '.$entity.' was successfully created.</info>');
-                break;
+            if (!$confirm = $helper->ask($input, $output, $confirmationQuestion)) {
+                $createEntity = $this->_createEntity($entity, $table, $fields);
 
-            case 2:
-                $output->writeln('<error>File src/Entity/'.$entity.'.php already exists.</error>');
-                break;
+                switch ($createEntity) {
+                    case 0:
+                        $output->writeln('<error>Error creating entity '.$entity.'.</error>');
+                        break;
+
+                    case 1:
+                        $output->writeln('<info>Entity '.$entity.' was successfully created.</info>');
+                        break;
+
+                    case 2:
+                        $output->writeln('<error>File src/Entity/'.$entity.'.php already exists.</error>');
+                        break;
+                }
+
+                return;
+            }
         }
     }
 
@@ -99,24 +143,29 @@ class EntityCreateCommand extends BaseCommand
                 ->setVisibility('private')
                 ->setDescription($this->_getEntityIdHeadBlockCode())
             );
-        foreach ($this->_getEntityFieldsArray($fields) as $key => $value) {
+        foreach ($fields as $key => $value) {
+
+            $underscoredKey =  S::create($key)->underscored()->toAscii();
+            $camelizedKey =  S::create($key)->camelize()->toAscii();
+            $ucamelizedKey =  S::create($key)->upperCamelize()->toAscii();
+
             $class
-                ->setProperty(PhpProperty::create($key)
+                ->setProperty(PhpProperty::create((string)$underscoredKey)
                     ->setVisibility('private')
-                    ->setDescription('@ORM\Column("'.$value.'")')
+                    ->setDescription('@ORM\Column(name="'.$underscoredKey.'", type="'.$value['type'].'", nullable='.$value['nullable'].')')
                 )
             ;
             $class
-                ->setMethod(PhpMethod::create('set'.ucfirst(S::create($key)->camelize()->toAscii()))
-                    ->setDescription('set'.ucfirst(S::create($key)->camelize()->toAscii()))
-                    ->addParameter(PhpParameter::create($key))
-                    ->setBody('$this->'.$key.' = $'.$key.';')
+                ->setMethod(PhpMethod::create('set'.$ucamelizedKey)
+                    ->setDescription('set'.$ucamelizedKey)
+                    ->addParameter(PhpParameter::create($camelizedKey))
+                    ->setBody('$this->'.$underscoredKey.' = $'.$camelizedKey.';')
                 )
             ;
             $class
-                ->setMethod(PhpMethod::create('get'.ucfirst(S::create($key)->camelize()->toAscii()))
-                    ->setDescription('get'.ucfirst(S::create($key)->camelize()->toAscii()))
-                    ->setBody('return $this->'.$key.';')
+                ->setMethod(PhpMethod::create('get'.$ucamelizedKey)
+                    ->setDescription('get'.$ucamelizedKey)
+                    ->setBody('return $this->'.$underscoredKey.';')
                 )
             ;
         }
@@ -156,31 +205,6 @@ class EntityCreateCommand extends BaseCommand
         $idCode .= '@ORM\GeneratedValue(strategy="IDENTITY")';
 
         return $idCode;
-    }
-
-    /**
-     * @param $fields
-     * @return array
-     */
-    private function _getEntityFieldsArray($fields)
-    {
-        $fieldsArray = [];
-        $fields = explode('|', $fields);
-
-        if(!is_array($fields)) {
-            return array();
-        }
-
-        foreach ($fields as $field){
-            $field = explode(':', $field);
-            if(!is_array($field)) {
-                return array();
-            } else {
-                $fieldsArray[$field[0]] = S::create($field[1])->camelize()->toAscii();
-            }
-        }
-
-        return $fieldsArray;
     }
 
     /**

@@ -14,8 +14,6 @@ namespace Mamba\Command;
 use gossi\codegen\generator\CodeGenerator;
 use gossi\codegen\model\PhpClass;
 use gossi\codegen\model\PhpMethod;
-use gossi\codegen\model\PhpParameter;
-use gossi\codegen\model\PhpProperty;
 use Mamba\Base\BaseCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

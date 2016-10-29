@@ -46,7 +46,22 @@ class EntityCreateAndDeleteCommandTest extends MambaTest
         $helper->setInputStream($this->getInputStream(
             "Acme\n"
             . "acme\n"
-            . "title:string(length='100', nullable=true, unique=false)|body:text|ranking:decimal(precision=10, scale=0)\n"
+            . "first name\n"
+            . "0\n"
+            . "0\n"
+            . "y\n"
+            . "is integer\n"
+            . "1\n"
+            . "1\n"
+            . "y\n"
+            . "is boolean\n"
+            . "4\n"
+            . "1\n"
+            . "y\n"
+            . "text\n"
+            . "10\n"
+            . "1\n"
+            . "n\n"
         ));
         $commandTester->execute([]);
         $output = $commandTester->getDisplay();
@@ -61,7 +76,22 @@ class EntityCreateAndDeleteCommandTest extends MambaTest
         $helper->setInputStream($this->getInputStream(
             "Acme\n"
             . "acme\n"
-            . "title:string(length='100', nullable=true, unique=false)|body:text|ranking:decimal(precision=10, scale=0)\n"
+            . "first name\n"
+            . "0\n"
+            . "0\n"
+            . "y\n"
+            . "a type of int\n"
+            . "1\n"
+            . "1\n"
+            . "y\n"
+            . "a type of bool\n"
+            . "4\n"
+            . "1\n"
+            . "y\n"
+            . "text\n"
+            . "10\n"
+            . "1\n"
+            . "n\n"
         ));
         $commandTester->execute([]);
         $output = $commandTester->getDisplay();

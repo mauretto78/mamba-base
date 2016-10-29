@@ -4,12 +4,12 @@ namespace Mamba\Base\Tests;
 
 use Mamba\Base\BaseType;
 use Mamba\Tests\MambaTest;
+use Silex\Provider\FormServiceProvider;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormView;
-use Silex\Provider\FormServiceProvider;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class BaseTypeTest extends MambaTest
@@ -56,22 +56,7 @@ class BaseTypeTest extends MambaTest
     {
         $this->assertInstanceOf('Symfony\Component\Form\FormView', $this->type->createView());
     }
-
-    public function testAddingErrorToForm()
-    {
-        $this->type->addError(new FormError('error'));
-        $this->type->addError(new FormError('error2'));
-        $this->type->addError(new FormError('error3'));
-
-        $formData = [
-            'sample' => '',
-        ];
-
-        $form = $this->type->getForm()->submit($formData);
-
-        var_dump( $this->type->getForm()->getErrors());
-    }
-
+    
     public function testSubmittingForm()
     {
         $formData = [
@@ -80,11 +65,18 @@ class BaseTypeTest extends MambaTest
 
         $form = $this->type->getForm()->submit($formData);
         $this->assertTrue($form->isSynchronized());
+        $this->assertTrue($form->isSubmitted());
+
         $view = $form->createView();
         $children = $view->children;
 
         foreach (array_keys($formData) as $key) {
             $this->assertArrayHasKey($key, $children);
+        }
+
+        foreach ($form->getData() as $key => $value) {
+            $this->assertEquals($key, 'sample');
+            $this->assertEquals($value, 'test');
         }
     }
 }
@@ -99,9 +91,6 @@ class SampleType extends BaseType
         return $this->factory->createBuilder(FormType::class)
             ->add('sample', TextType::class, [
                 'label' => 'sample',
-                'constraints' => [
-                    new Assert\NotBlank(),
-                ]
             ])
             ->getForm();
     }
