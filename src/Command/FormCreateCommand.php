@@ -111,7 +111,7 @@ class FormCreateCommand extends BaseCommand
     {
         $form = $this->_getFormName($form);
         $class = '\Mamba\Type\\'.$form;
-        $file = $this->app->getRootDir().'/src/Type/'.$form.'Type.php';
+        $file = $this->app->getFormDir().'/'.$form.'Type.php';
 
         // Duplicate file
         if (file_exists($file)) {

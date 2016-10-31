@@ -278,6 +278,54 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
     }
 
     /**
+     * @return string
+     */
+    public function getControllerNamespace()
+    {
+        return '\Mamba\Controller\\';
+    }
+
+    /**
+     * @return string
+     */
+    public function getControllerDir()
+    {
+        return $this->getRootDir().'/src/Controller';
+    }
+
+    /**
+     * @return string
+     */
+    public function getEntityNamespace()
+    {
+        return '\Mamba\Entity\\';
+    }
+
+    /**
+     * @return string
+     */
+    public function getEntityDir()
+    {
+        return $this->getRootDir().'/src/Entity';
+    }
+
+    /**
+     * @return string
+     */
+    public function getRepoDir()
+    {
+        return $this->getRootDir().'/src/Repository';
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormDir()
+    {
+        return $this->getRootDir().'/src/Type';
+    }
+
+    /**
      * Sets the $app['env'].
      */
     protected function _setEnv()
@@ -323,7 +371,8 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
         $app = $this;
 
         foreach ($this['config']['routings'] as $name => $routing) {
-            $method = @$routing['method'] ?: 'get';
+
+            $methods = $this->_resolveMethod(@$routing['method']);
 
             // Register controller as service
             $route = explode('@', $routing['action']);
@@ -334,15 +383,30 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
                 return new $route[0]($app);
             };
 
-            /** @var Route $route */
-            $route = $this->$method($routing['url'], $controller.':'.$action)->bind($name);
+            foreach ($methods as $method){
+                /** @var Route $route */
+                $route = $this->$method($routing['url'], $controller.':'.$action)->bind($name);
 
-            if (isset($routing['defaults'])) {
-                foreach ($routing['defaults'] as $parameter => $value) {
-                    $route->value($parameter, $value);
+                if (isset($routing['defaults'])) {
+                    foreach ($routing['defaults'] as $parameter => $value) {
+                        $route->value($parameter, $value);
+                    }
                 }
             }
         }
+    }
+
+    /**
+     * @param null $method
+     * @return array
+     */
+    private function _resolveMethod($method = null){
+
+        if(!$method){
+            return ['get'];
+        }
+
+        return explode('|', $method);
     }
 
     /**

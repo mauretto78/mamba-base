@@ -247,8 +247,8 @@ class EntityCreateCommand extends BaseCommand
     {
         $entity = $this->_getEntityName($entity);
         $class = '\Mamba\Entity\\'.$entity;
-        $file = $this->app->getRootDir().'/src/Entity/'.$entity.'.php';
-        $repo = $this->app->getRootDir().'/src/Repository/'.$entity.'Repository.php';
+        $file = $this->app->getEntityDir().'/'.$entity.'.php';
+        $repo = $this->app->getRepoDir().'/'.$entity.'Repository.php';
 
         // Duplicate file
         if (file_exists($file)) {

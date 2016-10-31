@@ -25,11 +25,11 @@ class BaseCommandTest extends MambaTest
 
     public function testHasCorrectControllerNamespace()
     {
-        $this->assertEquals('\Mamba\Controller\\', $this->command->getControllerNamespace());
+        $this->assertEquals('\Mamba\Controller\\', $this->app->getControllerNamespace());
     }
 
     public function testHasCorrectEntityNamespace()
     {
-        $this->assertEquals('\Mamba\Entity\\', $this->command->getEntityNamespace());
+        $this->assertEquals('\Mamba\Entity\\', $this->app->getEntityNamespace());
     }
 }

@@ -80,8 +80,8 @@ class ControllerCreateCommand extends BaseCommand
     private function _createController($controller)
     {
         $controller = $this->_getControllerName($controller);
-        $className = $this->getControllerNamespace().$controller.'Controller';
-        $file = $this->getControllerDir().'/'.$controller.'Controller.php';
+        $className = $this->app->getControllerNamespace().$controller.'Controller';
+        $file = $this->app->getControllerDir().'/'.$controller.'Controller.php';
 
         // Duplicate file
         if (file_exists($file)) {

@@ -2,6 +2,7 @@
 
 namespace Mamba\Base\Tests;
 
+use GuzzleHttp\Client;
 use Mamba\Base\BaseCommand;
 use Mamba\Providers\ClientServiceProvider;
 use Mamba\Providers\ConfigServiceProvider;
@@ -84,6 +85,8 @@ class BaseApplicationTest extends MambaTest
 
         $this->assertTrue($this->app->has('mamba.controller.dummycontroller'));
         $this->assertInstanceOf('Silex\Controller', $this->app->get('/dummy-url'));
+        $this->assertInstanceOf('Silex\Controller', $this->app->get('/multiple-method-url'));
+        $this->assertInstanceOf('Silex\Controller', $this->app->post('/multiple-method-urll'));
     }
 
     public function testInitProviders()

@@ -37,6 +37,7 @@ class MambaTest extends \PHPUnit_Framework_TestCase
     {
         $this->app = new Application('dev');
         $this->app->setRootDir(__DIR__.'/../..');
+        $this->app->setConfigDir(__DIR__.'/../../config');
         $this->app->setCacheDir($this->app->getRootDir().'/var/cache');
         $this->app->setConfigFiles(
             [

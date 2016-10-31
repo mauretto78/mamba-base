@@ -3,3 +3,8 @@ routings:
         method: get
         url: /dummy-url
         action: Mamba\Controller\DummyController@dummy
+
+    multiple-method-url:
+        method: get|post
+        url: /multiple-method-url
+        action: Mamba\Controller\DummyController@multiple

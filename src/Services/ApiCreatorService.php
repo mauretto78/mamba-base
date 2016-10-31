@@ -25,6 +25,11 @@ class ApiCreatorService
     private $entity;
 
     /**
+     * @var object
+     */
+    private $controller;
+
+    /**
      * @var string
      */
     private $version;
@@ -48,7 +53,23 @@ class ApiCreatorService
      */
     public function setEntity($entity)
     {
-        $this->entity = $entity;
+        $this->entity = S::create($entity)->upperCamelize();
+    }
+
+    /**
+     * @return object
+     */
+    public function getController()
+    {
+        return $this->controller;
+    }
+
+    /**
+     * @param object $controller
+     */
+    public function setController($controller)
+    {
+        $this->controller = S::create($controller)->upperCamelize();
     }
 
     /**
@@ -120,7 +141,7 @@ class ApiCreatorService
         ];
 
         $yaml = Yaml::dump($routes);
-        $file = $this->app->getRootDir().'/config/routing/api/'.$this->getEntity().'.yml';
+        $file = $this->app->getConfigDir().'/routing/api/'.$this->getEntity().'.yml';
 
         if ($newYamlFile = fopen($file, 'w')) {
             fwrite($newYamlFile, $yaml);
@@ -133,10 +154,13 @@ class ApiCreatorService
     }
 
     /**
-     * @return bool
+     * @return int
      */
     private function _createController()
     {
-        return true;
+        $controller = $this->getController();
+        $className = $this->app->getControllerNamespace() . $controller . 'Controller';
+        $file = $this->app->getControllerDir() . '/' . $controller . 'Controller.php';
+
     }
 }

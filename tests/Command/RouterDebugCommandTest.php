@@ -19,5 +19,6 @@ class RouterDebugCommandTest extends MambaTest
         // the output of the command in the console
         $output = $commandTester->getDisplay();
         $this->assertContains('dummy-url', $output);
+        $this->assertContains('multiple-method-url', $output);
     }
 }

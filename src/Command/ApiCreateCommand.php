@@ -32,7 +32,7 @@ class ApiCreateCommand extends BaseCommand
         $helper = $this->getHelper('question');
 
         $entities = [];
-        foreach (glob($this->getEntityDir().'/*') as $file) {
+        foreach (glob($this->app->getEntityDir().'/*') as $file) {
             $pathinfo = pathinfo($file);
             $entities[] = $pathinfo['filename'];
         }
@@ -71,7 +71,7 @@ class ApiCreateCommand extends BaseCommand
      */
     private function _createApi($entity, $version)
     {
-        $file = $this->getEntityDir().'/'.$entity.'.php';
+        $file = $this->app->getEntityDir().'/'.$entity.'.php';
 
         // Check the file
         if (!file_exists($file)) {
@@ -82,6 +82,7 @@ class ApiCreateCommand extends BaseCommand
         /* @var ApiCreatorService */
         $apiCreator = $this->getApp()->key('api_creator');
         $apiCreator->setEntity($entity);
+        $apiCreator->setController($entity.'Controller');
         $apiCreator->setVersion($version);
 
         if ($apiCreator->create()) {

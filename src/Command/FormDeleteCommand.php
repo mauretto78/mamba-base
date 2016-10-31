@@ -31,7 +31,7 @@ class FormDeleteCommand extends BaseCommand
         $helper = $this->getHelper('question');
 
         $forms = [];
-        foreach (glob($this->getFormDir().'/*') as $file) {
+        foreach (glob($this->app->getFormDir().'/*') as $file) {
             $pathinfo = pathinfo($file);
             $forms[] = $pathinfo['filename'];
         }
@@ -66,7 +66,7 @@ class FormDeleteCommand extends BaseCommand
      */
     private function _deleteForm($form)
     {
-        $file = $this->getFormDir().'/'.$form.'.php';
+        $file = $this->app->getFormDir().'/'.$form.'.php';
 
         // Check the file
         if (!file_exists($file)) {

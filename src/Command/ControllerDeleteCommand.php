@@ -31,7 +31,7 @@ class ControllerDeleteCommand extends BaseCommand
         $helper = $this->getHelper('question');
 
         $controllers = [];
-        foreach (glob($this->getControllerDir().'/*') as $file) {
+        foreach (glob($this->app->getControllerDir().'/*') as $file) {
             $pathinfo = pathinfo($file);
             $controllers[] = $pathinfo['filename'];
         }
@@ -66,7 +66,7 @@ class ControllerDeleteCommand extends BaseCommand
      */
     private function _deleteController($controller)
     {
-        $file = $this->getControllerDir().'/'.$controller.'.php';
+        $file = $this->app->getControllerDir().'/'.$controller.'.php';
 
         // Check the file
         if (!file_exists($file)) {

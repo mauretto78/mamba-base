@@ -1,0 +1,6 @@
+routings:
+    api.api.list: { method: get, url: api/2.0/api, action: Mamba\Controller\ApiController@list }
+    api.api.show: { method: get, url: 'api/2.0/api/{id}', action: Mamba\Controller\ApiController@show }
+    api.api.create: { method: post, url: api/2.0/api, action: Mamba\Controller\ApiController@create }
+    api.api.update: { method: put, url: 'api/2.0/api/{id}', action: Mamba\Controller\ApiController@update }
+    api.api.delete: { method: delete, url: 'api/2.0/api/{id}', action: Mamba\Controller\ApiController@delete }

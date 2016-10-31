@@ -19,8 +19,8 @@ class ApiCreatorCommandTest extends MambaTest
         /** @var QuestionHelper $helper */
         $helper = $this->command->getHelper('question');
         $helper->setInputStream($this->getInputStream(
-            "Acme\n"
-            ."acme\n"
+            "Api\n"
+            ."api\n"
             ."first name\n"
             ."0\n"
             ."0\n"
@@ -40,7 +40,7 @@ class ApiCreatorCommandTest extends MambaTest
         ));
         $commandTester->execute([]);
         $output = $commandTester->getDisplay();
-        $this->assertContains('Entity Acme was successfully created.', $output);
+        $this->assertContains('Entity Api was successfully created.', $output);
 
         // 2. Create Api on Entity
         $this->setCommand(new ApiCreateCommand($this->app));
@@ -49,10 +49,10 @@ class ApiCreatorCommandTest extends MambaTest
         /** @var QuestionHelper $helper */
         $helper = $this->command->getHelper('question');
         $helper->setInputStream($this->getInputStream(
-            "Acme\n"
+            "Api\n"
             ."2.0\n"
         ));
         $commandTester->execute([]);
-        echo $output = $commandTester->getDisplay();
+        $output = $commandTester->getDisplay();
     }
 }

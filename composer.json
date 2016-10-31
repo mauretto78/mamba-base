@@ -19,6 +19,7 @@
         "dflydev/doctrine-orm-service-provider": "^2.0",
         "guzzlehttp/guzzle": "^6.2",
         "knplabs/console-service-provider": "^2.0",
+        "mauretto78/config-loader": "1.*@dev",
         "silex/silex": "~2.0",
         "symfony/asset": "^3.1",
         "symfony/config": "^3.1",

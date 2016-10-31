@@ -31,7 +31,7 @@ class EntityDeleteCommand extends BaseCommand
         $helper = $this->getHelper('question');
 
         $entities = [];
-        foreach (glob($this->getEntityDir().'/*') as $file) {
+        foreach (glob($this->app->getEntityDir().'/*') as $file) {
             $pathinfo = pathinfo($file);
             $entities[] = $pathinfo['filename'];
         }
@@ -66,8 +66,8 @@ class EntityDeleteCommand extends BaseCommand
      */
     private function _deleteEntity($entity)
     {
-        $file = $this->getEntityDir().'/'.$entity.'.php';
-        $repo = $this->getRepoDir().'/'.$entity.'Repository.php';
+        $file = $this->app->getEntityDir().'/'.$entity.'.php';
+        $repo = $this->app->getRepoDir().'/'.$entity.'Repository.php';
 
         // Check the file
         if (!file_exists($file) and !file_exists($repo)) {
