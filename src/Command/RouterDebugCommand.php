@@ -15,6 +15,7 @@ use Mamba\Base\BaseCommand;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Yaml\Exception\RuntimeException;
 
 class RouterDebugCommand extends BaseCommand
 {
@@ -37,9 +38,15 @@ class RouterDebugCommand extends BaseCommand
         foreach (@$routings as $r => $details) {
             ++$counter;
             $c = explode('@', $details['action']);
+            $method = @$details['method'] ?: 'get';
+
+            if(!$details['url']){
+                throw new RuntimeException('An url value must be provided for the '.$r.' route.');
+            }
+
             $rows[] = [
                 $r,
-                $details['method'],
+                $method,
                 $details['url'],
                 $c[0],
                 $c[1].'Action',

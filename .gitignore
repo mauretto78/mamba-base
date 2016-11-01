@@ -1,5 +1,5 @@
-config
+/config
 phpunit.xml
-tmp
-var
-vendor
+/tmp
+/var
+/vendor

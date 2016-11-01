@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Mamba\Base\Controller;
+namespace Mamba\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Mamba\Base\BaseController;

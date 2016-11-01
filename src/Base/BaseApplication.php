@@ -368,45 +368,9 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
      */
     public function initRouting()
     {
-        $app = $this;
-
-        foreach ($this['config']['routings'] as $name => $routing) {
-
-            $methods = $this->_resolveMethod(@$routing['method']);
-
-            // Register controller as service
-            $route = explode('@', $routing['action']);
-            $controller = strtolower(str_replace('\\', '.', $route[0]));
-            $action = $route[1].'Action';
-
-            $this[$controller] = function () use ($app, $route) {
-                return new $route[0]($app);
-            };
-
-            foreach ($methods as $method){
-                /** @var Route $route */
-                $route = $this->$method($routing['url'], $controller.':'.$action)->bind($name);
-
-                if (isset($routing['defaults'])) {
-                    foreach ($routing['defaults'] as $parameter => $value) {
-                        $route->value($parameter, $value);
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * @param null $method
-     * @return array
-     */
-    private function _resolveMethod($method = null){
-
-        if(!$method){
-            return ['get'];
-        }
-
-        return explode('|', $method);
+        $this->register(new \Mamba\Providers\RoutingServiceProvider(), [
+            'config.routes' => $this['config']['routings'],
+        ]);
     }
 
     /**

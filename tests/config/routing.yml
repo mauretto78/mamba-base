@@ -8,3 +8,21 @@ routings:
         method: get|post
         url: /multiple-method-url
         action: Mamba\Controller\DummyController@multiple
+
+    dummy-url-with-no-method:
+        url: /dummy-url-with-no-method
+        action: Mamba\Controller\DummyController@noMethod
+
+    dummy-url-with-default-values:
+        method: get
+        url: /dummy-url-with-default-values/{code}
+        action: Mamba\Controller\DummyController@defaultValues
+        defaults:
+          code: 'dummy-value'
+
+    dummy-url-with-requirements:
+        method: get
+        url: /dummy-url-with-requirements/{slug}
+        action: Mamba\Controller\DummyController@requirements
+        requirements:
+          slug: "[a-z0-9-]*"

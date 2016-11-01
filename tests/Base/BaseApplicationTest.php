@@ -79,16 +79,6 @@ class BaseApplicationTest extends MambaTest
         $this->assertInstanceOf('Doctrine\ORM\EntityManager', $this->em);
     }
 
-    public function testInitRouting()
-    {
-        $this->app->initRouting();
-
-        $this->assertTrue($this->app->has('mamba.controller.dummycontroller'));
-        $this->assertInstanceOf('Silex\Controller', $this->app->get('/dummy-url'));
-        $this->assertInstanceOf('Silex\Controller', $this->app->get('/multiple-method-url'));
-        $this->assertInstanceOf('Silex\Controller', $this->app->post('/multiple-method-urll'));
-    }
-
     public function testInitProviders()
     {
         $a = [
