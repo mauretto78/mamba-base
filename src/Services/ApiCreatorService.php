@@ -146,8 +146,12 @@ class ApiCreatorService
 
         $yaml = Yaml::dump($routes);
         $file = $this->app->getConfigDir().'/routing/api/'.$this->getEntity().'.yml';
+        $routingFile = $this->app->getConfigDir().'routing.yml';
 
-        if ($newYamlFile = fopen($file, 'w')) {
+        if ($newYamlFile = fopen($file, 'w') and $newRoutingFile = fopen($routingFile, 'w')) {
+            fwrite($newRoutingFile, "\t".'- routing/api/'.$this->getEntity().'.yml');
+            fclose($newRoutingFile);
+
             fwrite($newYamlFile, $yaml);
             fclose($newYamlFile);
 
