@@ -92,6 +92,10 @@ class MambaTest extends \PHPUnit_Framework_TestCase
             ]
         );
 
+        $this->app->register(new \Mamba\Providers\MigrationServiceProvider(), array(
+            'db.migrations.path' => __DIR__ . '/../Resources/migrations',
+        ));
+
         $this->app->register(new TwigServiceProvider(), [
             'twig.path' => __DIR__.'/../Resources/views/',
         ]);
