@@ -3,13 +3,31 @@
 namespace Mamba\Command\Tests;
 
 use Mamba\Command\ApiCreateCommand;
+use Mamba\Command\ApiDeleteCommand;
 use Mamba\Command\EntityCreateCommand;
 use Mamba\Tests\MambaTest;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class ApiCreatorCommandTest extends MambaTest
+class ApiCreateAndDeleteCommandTest extends MambaTest
 {
+    public function testDeletingNotExistingEntity()
+    {
+        $this->setCommand(new ApiDeleteCommand($this->app));
+        $commandTester = new CommandTester($this->command);
+
+        /** @var QuestionHelper $helper */
+        $helper = $this->command->getHelper('question');
+
+        // 1. Not Existing Entity
+        $helper->setInputStream($this->getInputStream('NotExistingEntity'));
+        $commandTester->execute([
+
+        ]);
+        $output = $commandTester->getDisplay();
+        $this->assertContains('API based on NotExistingEntity Entity does not exists.', $output);
+    }
+
     public function testExecute()
     {
         // 1. Create Entity
@@ -54,5 +72,17 @@ class ApiCreatorCommandTest extends MambaTest
         ));
         $commandTester->execute([]);
         $output = $commandTester->getDisplay();
+        $this->assertContains('API on Entity Api was successfully deleted.', $output);
+        
+        // 3. Delete Api, Entity, Repository and Controller
+        $this->setCommand(new ApiDeleteCommand($this->app));
+        $commandTester = new CommandTester($this->command);
+
+        /** @var QuestionHelper $helper */
+        $helper = $this->command->getHelper('question');
+        $helper->setInputStream($this->getInputStream('Api'));
+        $commandTester->execute([]);
+        $output = $commandTester->getDisplay();
+        $this->assertContains('API based on Api Entity was successfully deleted.', $output);
     }
 }

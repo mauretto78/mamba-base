@@ -25,13 +25,13 @@ class EntityCreateAndDeleteCommandTest extends MambaTest
         /** @var QuestionHelper $helper */
         $helper = $this->command->getHelper('question');
 
-        // 1. Create Controller
-        $helper->setInputStream($this->getInputStream('NotExistingCommand'));
+        // 1. Not Existing Entity
+        $helper->setInputStream($this->getInputStream('NotExistingEntity'));
         $commandTester->execute([
 
         ]);
         $output = $commandTester->getDisplay();
-        $this->assertContains('NotExistingCommand does not exists.', $output);
+        $this->assertContains('NotExistingEntity does not exists.', $output);
     }
 
     public function testExecute()

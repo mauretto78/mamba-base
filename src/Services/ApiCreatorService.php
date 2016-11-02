@@ -2,6 +2,10 @@
 
 namespace Mamba\Services;
 
+use gossi\codegen\generator\CodeGenerator;
+use gossi\codegen\model\PhpClass;
+use gossi\codegen\model\PhpMethod;
+use gossi\codegen\model\PhpParameter;
 use Mamba\Base\BaseApplication as Application;
 use Doctrine\ORM\EntityManager;
 use Stringy\Stringy as S;
@@ -159,8 +163,66 @@ class ApiCreatorService
     private function _createController()
     {
         $controller = $this->getController();
-        $className = $this->app->getControllerNamespace() . $controller . 'Controller';
-        $file = $this->app->getControllerDir() . '/' . $controller . 'Controller.php';
+        $file = $this->app->getControllerDir() . '/' . $controller . '.php';
 
+        // Duplicate file
+        if (file_exists($file)) {
+            return 2;
+        }
+
+        // Create Controller
+        if ($newController = fopen($file, 'w')) {
+            $class = new PhpClass();
+            $class
+                ->setName($controller.' extends BaseController')
+                ->setNamespace($this->app->getControllerNamespace())
+                ->setDescription($controller.' Class')
+                ->setMethod(PhpMethod::create('listAction')
+                    ->addParameter(PhpParameter::create('request'))
+                    ->setDescription('listAction')
+                    ->setType('JsonResponse')
+                    ->setBody('return new JsonResponse(\'dummy response\');')
+                )
+                ->setMethod(PhpMethod::create('showAction')
+                    ->addParameter(PhpParameter::create('request'))
+                    ->setDescription('showAction')
+                    ->setType('JsonResponse')
+                    ->setBody('return new JsonResponse(\'dummy response\');')
+                )
+                ->setMethod(PhpMethod::create('createAction')
+                    ->addParameter(PhpParameter::create('request'))
+                    ->setDescription('createAction')
+                    ->setType('JsonResponse')
+                    ->setBody('return new JsonResponse(\'dummy response\');')
+                )
+                ->setMethod(PhpMethod::create('updateAction')
+                    ->addParameter(PhpParameter::create('request'))
+                    ->setDescription('updateAction')
+                    ->setType('JsonResponse')
+                    ->setBody('return new JsonResponse(\'dummy response\');')
+                )
+                ->setMethod(PhpMethod::create('deleteAction')
+                    ->addParameter(PhpParameter::create('request'))
+                    ->setDescription('deleteAction')
+                    ->setType('JsonResponse')
+                    ->setBody('return new JsonResponse(\'dummy response\');')
+                )
+                ->addUseStatement('Mamba\\Base\\BaseController')
+                ->addUseStatement('Symfony\\Component\\HttpFoundation\\JsonResponse')
+                ->addUseStatement('Symfony\\Component\\HttpFoundation\\Request')
+            ;
+            $generator = new CodeGenerator();
+
+            $code = '<?php';
+            $code .= "\n\n";
+            $code .= $generator->generate($class);
+
+            fwrite($newController, $code);
+            fclose($newController);
+
+            return 1;
+        }
+
+        return 0;
     }
 }
