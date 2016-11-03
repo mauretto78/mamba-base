@@ -389,12 +389,16 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
 
     /**
      * Loads the routing system.
+     *
+     * @return mixed
      */
     public function initRouting()
     {
         $this->register(new \Mamba\Providers\RoutingServiceProvider(), [
             'config.routes' => $this['config']['routings'],
         ]);
+
+        return $this['routing'];
     }
 
     /**
