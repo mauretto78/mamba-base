@@ -11,6 +11,7 @@
 
 namespace Mamba\Base;
 
+use Doctrine\ORM\EntityManager;
 use Mamba\Base\BaseApplication as Container;
 
 /**
@@ -27,6 +28,11 @@ class BaseController
      * @var \Twig_Environment
      */
     protected $view;
+
+    /**
+     * @var EntityManager
+     */
+    protected $em;
 
     /**
      * Set the application class to the controller.
@@ -52,6 +58,14 @@ class BaseController
     public function getView()
     {
         return $this->app->key('twig');
+    }
+
+    /**
+     * @return EntityManager
+     */
+    public function getEm()
+    {
+        return $this->app->key('orm.em ');
     }
 
     /**

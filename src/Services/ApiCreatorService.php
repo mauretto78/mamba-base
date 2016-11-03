@@ -182,7 +182,7 @@ class ApiCreatorService
             $class = new PhpClass();
             $class
                 ->setName($controller.' extends BaseController')
-                ->setNamespace($this->app->getControllerNamespace())
+                ->setNamespace('Mamba\\Controller')
                 ->setDescription($controller.' Class')
                 ->setMethod(PhpMethod::create('listAction')
                     ->addParameter(PhpParameter::create('request'))
