@@ -290,7 +290,13 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
      */
     public function getControllerDir()
     {
-        return $this->getRootDir().'/src/Controller';
+        $controllerDir = $this->getRootDir().'/src/Controller';
+
+        if(!@mkdir($controllerDir, 0755) && !is_dir($controllerDir)){
+            throw new \RuntimeException('Directory '.$controllerDir.' could not be created');
+        }
+
+        return $controllerDir;
     }
 
     /**
@@ -306,7 +312,13 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
      */
     public function getEntityDir()
     {
-        return $this->getRootDir().'/src/Entity';
+        $entityDir = $this->getRootDir().'/src/Entity';
+
+        if(!@mkdir($entityDir, 0755) && !is_dir($entityDir)){
+            throw new \RuntimeException('Directory '.$entityDir.' could not be created');
+        }
+
+        return $entityDir;
     }
 
     /**
@@ -314,7 +326,13 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
      */
     public function getRepoDir()
     {
-        return $this->getRootDir().'/src/Repository';
+        $repoDir = $this->getRootDir().'/src/Repository';
+
+        if(!@mkdir($repoDir, 0755) && !is_dir($repoDir)){
+            throw new \RuntimeException('Directory '.$repoDir.' could not be created');
+        }
+
+        return $repoDir;
     }
 
     /**
@@ -322,7 +340,13 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
      */
     public function getFormDir()
     {
-        return $this->getRootDir().'/src/Type';
+        $formDir = $this->getRootDir().'/src/Type';
+
+        if(!@mkdir($formDir, 0755) && !is_dir($formDir)){
+            throw new \RuntimeException('Directory '.$formDir.' could not be created');
+        }
+
+        return $formDir;
     }
 
     /**

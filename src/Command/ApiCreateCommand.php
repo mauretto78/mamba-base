@@ -52,11 +52,11 @@ class ApiCreateCommand extends BaseCommand
                 break;
 
             case 1:
-                $output->writeln('<info>API on Entity '.$entity.' was successfully deleted.</info>');
+                $output->writeln('<info>API on Entity '.$entity.' was successfully created.</info>');
                 break;
 
             case 2:
-                $output->writeln('<error>API on Entity '.$entity.' does not exists.</error>');
+                $output->writeln('<error>Entity '.$entity.' does not exists.</error>');
                 break;
         }
     }

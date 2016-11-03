@@ -145,13 +145,16 @@ class ApiCreatorService
         ];
 
         $yaml = Yaml::dump($routes);
-        $file = $this->app->getConfigDir().'/routing/api/'.strtolower($this->getEntity()).'.yml';
-        $routingFile = $this->app->getConfigDir().'/routing.yml';
+        $yamlDir = $this->app->getConfigDir().'/routing/api';
+        $yamlFile = $yamlDir.'/'.strtolower($this->getEntity()).'.yml';
 
-        if ($newYamlFile = fopen($file, 'w') and $newRoutingFile = fopen($routingFile, 'w')) {
-            fwrite($newRoutingFile, "\t".'- routing/api/'.strtolower($this->getEntity()).'.yml');
-            fclose($newRoutingFile);
+        if(!@mkdir($yamlDir, 0755) && !is_dir($yamlDir)){
+            throw new \RuntimeException('Directory '.$yamlDir.' could not be created');
+        }
 
+        //$routingFile = $this->app->getConfigDir().'/routing.yml';
+
+        if ($newYamlFile = fopen($yamlFile, 'w')) {
             fwrite($newYamlFile, $yaml);
             fclose($newYamlFile);
 
@@ -160,7 +163,7 @@ class ApiCreatorService
 
         return false;
     }
-
+    
     /**
      * @return int
      */

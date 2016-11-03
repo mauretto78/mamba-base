@@ -70,8 +70,7 @@ class ApiDeleteCommand extends BaseCommand
         $entityFile = $this->app->getEntityDir().'/'.$entity.'.php';
         $repo = $this->app->getRepoDir().'/'.$entity.'Repository.php';
         $file = $this->app->getConfigDir().'/routing/api/'.$entity.'.yml';
-        $routingFile = $this->app->getConfigDir().'/routing.yml';
-
+        
         // Check the files
         if (!file_exists($entityFile)) {
             return 2;

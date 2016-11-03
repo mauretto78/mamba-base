@@ -11,6 +11,22 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class ApiCreateAndDeleteCommandTest extends MambaTest
 {
+    public function testTryToCreateAnApiFromANotExistingEntity()
+    {
+        $this->setCommand(new ApiCreateCommand($this->app));
+        $commandTester = new CommandTester($this->command);
+
+        /** @var QuestionHelper $helper */
+        $helper = $this->command->getHelper('question');
+        $helper->setInputStream($this->getInputStream(
+            "Svantani\n"
+            ."2.0\n"
+        ));
+        $commandTester->execute([]);
+        $output = $commandTester->getDisplay();
+        $this->assertContains('Entity Svantani does not exists.', $output);
+    }
+
     public function testDeletingNotExistingEntity()
     {
         $this->setCommand(new ApiDeleteCommand($this->app));
@@ -72,7 +88,7 @@ class ApiCreateAndDeleteCommandTest extends MambaTest
         ));
         $commandTester->execute([]);
         $output = $commandTester->getDisplay();
-        $this->assertContains('API on Entity Api was successfully deleted.', $output);
+        $this->assertContains('API on Entity Api was successfully created.', $output);
         
         // 3. Delete Api, Entity, Repository and Controller
         $this->setCommand(new ApiDeleteCommand($this->app));
