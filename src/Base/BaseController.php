@@ -12,6 +12,7 @@
 namespace Mamba\Base;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Mamba\Base\BaseApplication as Container;
 use Symfony\Component\Serializer\Serializer;
 
@@ -39,6 +40,11 @@ class BaseController
      * @var Serializer
      */
     protected $serializer;
+
+    /**
+     * @var EntityRepository
+     */
+    protected $repo;
 
     /**
      * Set the application class to the controller.
@@ -91,6 +97,22 @@ class BaseController
     public function serialize($data, $format, array $context = array())
     {
         return $this->getSerializer()->serialize($data, $format, $context);
+    }
+
+    /**
+     * @return EntityRepository
+     */
+    public function getRepo()
+    {
+        return $this->repo;
+    }
+
+    /**
+     * @param $repo
+     */
+    public function setRepo($repo)
+    {
+        $this->repo = $this->getEm()->getRepository($repo);
     }
 
     /**
