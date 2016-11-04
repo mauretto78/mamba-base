@@ -71,7 +71,7 @@ class BaseController
      */
     public function getEm()
     {
-        return $this->em = $this->app->key('orm.em ');
+        return $this->em = $this->app->key('orm.em');
     }
 
     /**
