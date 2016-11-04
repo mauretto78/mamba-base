@@ -13,6 +13,7 @@ namespace Mamba\Base;
 
 use Doctrine\ORM\EntityManager;
 use Mamba\Base\BaseApplication as Container;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Class BaseController.
@@ -33,6 +34,11 @@ class BaseController
      * @var EntityManager
      */
     protected $em;
+
+    /**
+     * @var Serializer
+     */
+    protected $serializer;
 
     /**
      * Set the application class to the controller.
@@ -57,7 +63,7 @@ class BaseController
      */
     public function getView()
     {
-        return $this->app->key('twig');
+        return $this->view = $this->app->key('twig');
     }
 
     /**
@@ -65,7 +71,26 @@ class BaseController
      */
     public function getEm()
     {
-        return $this->app->key('orm.em ');
+        return $this->em = $this->app->key('orm.em ');
+    }
+
+    /**
+     * @return Serializer
+     */
+    public function getSerializer()
+    {
+        return $this->serializer = $this->app->key('serializer');
+    }
+
+    /**
+     * @param $data
+     * @param $format
+     * @param array $context
+     * @return string|\Symfony\Component\Serializer\Encoder\scalar
+     */
+    public function serialize($data, $format, array $context = array())
+    {
+        return $this->serializer->serialize($data, $format, $context);
     }
 
     /**

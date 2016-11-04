@@ -32,6 +32,7 @@
         "symfony/intl": "^3.1",
         "symfony/monolog-bridge": "^3.1",
         "symfony/security-csrf": "^3.1",
+        "symfony/serializer": "^3.1",
         "symfony/translation": "^3.1",
         "symfony/twig-bridge": "^3.1",
         "symfony/validator": "^3.1",
