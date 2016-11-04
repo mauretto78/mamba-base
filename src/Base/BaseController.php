@@ -90,7 +90,7 @@ class BaseController
      */
     public function serialize($data, $format, array $context = array())
     {
-        return $this->serializer->serialize($data, $format, $context);
+        return $this->getSerializer()->serialize($data, $format, $context);
     }
 
     /**
