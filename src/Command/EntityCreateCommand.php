@@ -145,6 +145,13 @@ class EntityCreateCommand extends BaseCommand
                 ->setVisibility('private')
                 ->setDescription($this->_getEntityIdHeadBlockCode())
             );
+
+        $class
+            ->setMethod(PhpMethod::create('getId')
+                ->setDescription('getId')
+                ->setBody('return $this->id;')
+            );
+
         foreach ($fields as $key => $value) {
             $underscoredKey = S::create($key)->underscored()->toAscii();
             $camelizedKey = S::create($key)->camelize()->toAscii();
