@@ -11,10 +11,16 @@
 
 namespace Mamba\Command;
 
-use gossi\codegen\generator\CodeGenerator;
-use gossi\codegen\model\PhpClass;
-use gossi\codegen\model\PhpMethod;
 use Mamba\Base\BaseCommand;
+use Memio\Model\Argument;
+use Memio\Memio\Config\Build;
+use Memio\Model\File;
+use Memio\Model\FullyQualifiedName;
+use Memio\Model\Method;
+use Memio\Model\Object;
+use Memio\Model\Phpdoc\Description;
+use Memio\Model\Phpdoc\MethodPhpdoc;
+use Memio\Model\Phpdoc\ReturnTag;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
@@ -120,7 +126,7 @@ class FormCreateCommand extends BaseCommand
 
         // Create Form
         if ($newForm = fopen($file, 'w')) {
-            $txt = $this->_getFormCode($form, $fields);
+            $txt = $this->_getFormCode($file, $form, $fields);
             fwrite($newForm, $txt);
             fclose($newForm);
 
@@ -131,46 +137,50 @@ class FormCreateCommand extends BaseCommand
     }
 
     /**
+     * @param $file
      * @param $form
      * @param $fields
      *
      * @return string
      */
-    private function _getFormCode($form, $fields)
+    private function _getFormCode($file, $form, $fields)
     {
-        $class = new PhpClass();
-        $class
-            ->setName($form.'Type extends BaseType')
-            ->setNamespace('Mamba\\Type')
-            ->setDescription($form.'Type Class')
-            ->setMethod(PhpMethod::create('getForm')
-                ->setDescription('getForm')
-                ->setType('mixed')
-                ->setBody($this->_getFieldsCode($form, $fields))
+        $newForm = File::make($file)
+            ->addFullyQualifiedName(FullyQualifiedName::make('Mamba\Base\BaseType'))
+            ->addFullyQualifiedName(FullyQualifiedName::make('Symfony\Component\Form\Extension\Core\Type\ChoiceType'))
+            ->addFullyQualifiedName(FullyQualifiedName::make('Symfony\Component\Form\Extension\Core\Type\EmailType'))
+            ->addFullyQualifiedName(FullyQualifiedName::make('Symfony\Component\Form\Extension\Core\Type\FormType'))
+            ->addFullyQualifiedName(FullyQualifiedName::make('Symfony\Component\Form\Extension\Core\Type\NumberType'))
+            ->addFullyQualifiedName(FullyQualifiedName::make('Symfony\Component\Form\Extension\Core\Type\TextType'))
+            ->addFullyQualifiedName(FullyQualifiedName::make('Symfony\Component\Form\Extension\Core\Type\TextareaType'))
+            ->addFullyQualifiedName(FullyQualifiedName::make('Symfony\Component\Form\Form'))
+            ->addFullyQualifiedName(FullyQualifiedName::make('Symfony\Component\Form\FormView'))
+            ->addFullyQualifiedName(FullyQualifiedName::make('Symfony\Component\Validator\Constraints as Assert'))
+            ->setStructure(
+                Object::make('Mamba\Type\\'.$form.'Type')
+                    ->extend(Object::make('Mamba\Base\BaseType'))
+                    ->addMethod(
+                        Method::make('getForm')
+                            ->setPhpdoc(MethodPhpdoc::make()
+                                ->setDescription(Description::make('getForm'))
+                                ->setReturnTag(new ReturnTag('mixed'))
+                            )
+                            ->setBody($this->_getFieldsCode($form, $fields))
+                    )
+                    ->addMethod(
+                        Method::make('createView')
+                            ->setPhpdoc(MethodPhpdoc::make()
+                                ->setDescription(Description::make('createView'))
+                                ->setReturnTag(new ReturnTag('FormView'))
+                            )
+                            ->setBody("\t\t".'return $this->getForm()->createView();')
+                    )
             )
-            ->setMethod(PhpMethod::create('createView')
-                ->setDescription('createView')
-                ->setType('FormView')
-                ->setBody('return $this->getForm()->createView();')
-            )
-            ->addUseStatement('Mamba\\Base\\BaseType')
-            ->addUseStatement('Symfony\\Component\\Form\\Extension\\Core\\Type\\ChoiceType')
-            ->addUseStatement('Symfony\\Component\\Form\\Extension\\Core\\Type\\EmailType')
-            ->addUseStatement('Symfony\\Component\\Form\\Extension\\Core\\Type\\FormType')
-            ->addUseStatement('Symfony\\Component\\Form\\Extension\\Core\\Type\\NumberType')
-            ->addUseStatement('Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType')
-            ->addUseStatement('Symfony\\Component\\Form\\Extension\\Core\\Type\\TextareaType')
-            ->addUseStatement('Symfony\\Component\\Form\\Form')
-            ->addUseStatement('Symfony\\Component\\Form\\FormView')
-            ->addUseStatement('Symfony\\Component\\Validator\\Constraints', 'Assert')
         ;
-        $generator = new CodeGenerator();
 
-        $code = '<?php';
-        $code .= "\n\n";
-        $code .= $generator->generate($class);
+        $prettyPrinter = Build::prettyPrinter();
 
-        return $code;
+        return $prettyPrinter->generateCode($newForm);
     }
 
     /**
@@ -181,24 +191,24 @@ class FormCreateCommand extends BaseCommand
      */
     private function _getFieldsCode($form, $fields)
     {
-        $body = '$this->setName(\''.$form.'Type\');';
+        $body = "\t\t".'$this->setName(\''.$form.'Type\');';
         $body .= PHP_EOL;
         $body .= PHP_EOL;
-        $body .= '$form = $this->factory->createBuilder(FormType::class)';
+        $body .= "\t\t".'$form = $this->factory->createBuilder(FormType::class)';
         foreach ($fields as $key => $value) {
             $body .= PHP_EOL;
-            $body .= "\t".'->add(\''.$key.'\', '.$value.'Type::class, [';
-            $body .= "\n\t\t".'\'label\' => \''.$key.'\',';
-            $body .= "\n\t\t".'\'constraints\' => [';
-            $body .= "\n\t\t\t".'new Assert\NotBlank(),';
-            $body .= "\n\t\t".'],';
-            $body .= "\n\t".'])';
+            $body .= "\t\t\t".'->add(\''.$key.'\', '.$value.'Type::class, [';
+            $body .= "\n\t\t\t\t".'\'label\' => \''.$key.'\',';
+            $body .= "\n\t\t\t\t".'\'constraints\' => [';
+            $body .= "\n\t\t\t\t\t".'new Assert\NotBlank(),';
+            $body .= "\n\t\t\t\t".'],';
+            $body .= "\n\t\t\t".'])';
         }
         $body .= PHP_EOL;
-        $body .= ';';
+        $body .= "\t\t".';';
         $body .= PHP_EOL;
         $body .= PHP_EOL;
-        $body .= 'return $form->getForm();';
+        $body .= "\t\t".'return $form->getForm();';
 
         return $body;
     }

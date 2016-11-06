@@ -11,12 +11,19 @@
 
 namespace Mamba\Command;
 
-use gossi\codegen\generator\CodeGenerator;
-use gossi\codegen\model\PhpClass;
-use gossi\codegen\model\PhpMethod;
-use gossi\codegen\model\PhpParameter;
-use gossi\codegen\model\PhpProperty;
 use Mamba\Base\BaseCommand;
+use Memio\Model\Argument;
+use Memio\Memio\Config\Build;
+use Memio\Model\File;
+use Memio\Model\FullyQualifiedName;
+use Memio\Model\Method;
+use Memio\Model\Object;
+use Memio\Model\Phpdoc\Description;
+use Memio\Model\Phpdoc\MethodPhpdoc;
+use Memio\Model\Phpdoc\PropertyPhpdoc;
+use Memio\Model\Phpdoc\StructurePhpdoc;
+use Memio\Model\Phpdoc\VariableTag;
+use Memio\Model\Property;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
@@ -127,119 +134,6 @@ class EntityCreateCommand extends BaseCommand
     /**
      * @param $entity
      * @param null $table
-     * @param null $fields
-     *
-     * @return string
-     */
-    private function _getEntityCode($entity, $table = null, $fields = null)
-    {
-        $class = new PhpClass();
-        $class
-            ->setName($entity)
-            ->setNamespace('Mamba\\Entity')
-            ->setDescription($this->_getEntityHeadBlockCode($entity, $table))
-            ->addUseStatement('Doctrine\\ORM\\Mapping', 'ORM')
-        ;
-        $class
-            ->setProperty(PhpProperty::create('id')
-                ->setVisibility('private')
-                ->setDescription($this->_getEntityIdHeadBlockCode())
-            );
-        foreach ($fields as $key => $value) {
-            $underscoredKey = S::create($key)->underscored()->toAscii();
-            $camelizedKey = S::create($key)->camelize()->toAscii();
-            $ucamelizedKey = S::create($key)->upperCamelize()->toAscii();
-
-            $class
-                ->setProperty(PhpProperty::create((string) $underscoredKey)
-                    ->setVisibility('private')
-                    ->setDescription('@ORM\Column(name="'.$underscoredKey.'", type="'.$value['type'].'", nullable='.$value['nullable'].')')
-                )
-            ;
-            $class
-                ->setMethod(PhpMethod::create('set'.$ucamelizedKey)
-                    ->setDescription('set'.$ucamelizedKey)
-                    ->addParameter(PhpParameter::create($camelizedKey))
-                    ->setBody('$this->'.$underscoredKey.' = $'.$camelizedKey.';')
-                )
-            ;
-            $class
-                ->setMethod(PhpMethod::create('get'.$ucamelizedKey)
-                    ->setDescription('get'.$ucamelizedKey)
-                    ->setBody('return $this->'.$underscoredKey.';')
-                )
-            ;
-        }
-        $generator = new CodeGenerator();
-
-        $code = '<?php';
-        $code .= "\n\n";
-        $code .= $generator->generate($class);
-
-        return $code;
-    }
-
-    /**
-     * @param $entity
-     * @param null $table
-     *
-     * @return string
-     */
-    private function _getEntityHeadBlockCode($entity, $table = null)
-    {
-        $headBlock = 'Mamba\Entity\\'.$entity;
-        $headBlock .= "\n";
-        if ($table) {
-            $headBlock .= '@ORM\Table(name="'.$table.'")';
-            $headBlock .= "\n";
-        }
-        $headBlock .= '@ORM\Entity(repositoryClass="Mamba\Repository\\'.$entity.'Repository")';
-
-        return $headBlock;
-    }
-
-    public function _getEntityIdHeadBlockCode()
-    {
-        $idCode = '@ORM\Column(name="id", type="integer", nullable=false)';
-        $idCode .= "\n";
-        $idCode .= '@ORM\Id';
-        $idCode .= "\n";
-        $idCode .= '@ORM\GeneratedValue(strategy="IDENTITY")';
-
-        return $idCode;
-    }
-
-    /**
-     * @param $entity
-     *
-     * @return string
-     */
-    private function _getRepoCode($entity)
-    {
-        $class = new PhpClass();
-        $class
-            ->setName($entity.'Repository extends EntityRepository')
-            ->setNamespace('Mamba\\Repository')
-            ->setDescription($entity.'Repository Class')
-            ->setMethod(PhpMethod::create('dummyMethod')
-                ->setDescription('dummyMethod')
-                ->setType('mixed')
-                ->setBody('//')
-            )
-            ->addUseStatement('Doctrine\\ORM\\EntityRepository')
-        ;
-        $generator = new CodeGenerator();
-
-        $code = '<?php';
-        $code .= "\n\n";
-        $code .= $generator->generate($class);
-
-        return $code;
-    }
-
-    /**
-     * @param $entity
-     * @param null $table
      *
      * @return int
      */
@@ -257,17 +151,144 @@ class EntityCreateCommand extends BaseCommand
 
         // Create Entity and Repository
         if ($newEntity = fopen($file, 'w') and $newRepo = fopen($repo, 'w')) {
-            $txt = $this->_getEntityCode($entity, $table, $fields);
-            fwrite($newEntity, $txt);
+            $code = $this->_generateEntity($file, $entity, $table, $fields);
+            fwrite($newEntity, $code);
             fclose($newEntity);
 
-            $txt = $this->_getRepoCode($entity);
-            fwrite($newRepo, $txt);
+            $code = $this->_generateRepo($repo, $entity);
+            fwrite($newRepo, $code);
             fclose($newRepo);
 
             return 1;
         }
 
         return 0;
+    }
+
+    /**
+     * @param $file
+     * @param $entity
+     * @param null $table
+     * @param null $fields
+     *
+     * @return string
+     */
+    private function _generateEntity($file, $entity, $table = null, $fields = null)
+    {
+        $object = Object::make('Mamba\Entity\\'.$entity);
+        $object->setPhpdoc(StructurePhpdoc::make()
+            ->setDescription(Description::make($this->_getEntityHeadBlockCode($entity, $table)))
+        );
+        $object->addProperty(Property::make('id')
+            ->setPhpdoc(PropertyPhpdoc::make()
+                ->setVariableTag(VariableTag::make('id'."\n".$this->_getEntityIdHeadBlockCode())
+                )
+            )
+            ->makePrivate()
+        );
+        foreach ($fields as $key => $value) {
+            $underscoredKey = S::create($key)->underscored()->toAscii();
+            $camelizedKey = S::create($key)->camelize()->toAscii();
+            $ucamelizedKey = S::create($key)->upperCamelize()->toAscii();
+
+            $object->addProperty(
+                Property::make($underscoredKey)
+                    ->setPhpdoc(PropertyPhpdoc::make()
+                        ->setVariableTag(VariableTag::make('$'.$underscoredKey."\n".'@Column(name='.$underscoredKey.', type='.$value['type'].', nullable='.$value['nullable'].')')
+                        )
+                    )
+            );
+
+            $object->addMethod(
+                Method::make('set'.$ucamelizedKey)
+                    ->setPhpdoc(MethodPhpdoc::make()
+                        ->setDescription(Description::make('set'.$ucamelizedKey))
+                    )
+                    ->addArgument(new Argument('mixed', $camelizedKey))
+                    ->setBody("\t\t".'$this->'.$underscoredKey.' = $'.$camelizedKey.';')
+            );
+
+            $object->addMethod(
+                Method::make('get'.$ucamelizedKey)
+                    ->setPhpdoc(MethodPhpdoc::make()
+                        ->setDescription(Description::make('get'.$ucamelizedKey))
+                    )
+                    ->setBody("\t\t".'return $this->'.$underscoredKey.';')
+            );
+        }
+        
+        $newEntity = File::make($file)
+            ->addFullyQualifiedName(new FullyQualifiedName('Doctrine\ORM\Mapping\Column'))
+            ->addFullyQualifiedName(new FullyQualifiedName('Doctrine\ORM\Mapping\Entity'))
+            ->addFullyQualifiedName(new FullyQualifiedName('Doctrine\ORM\Mapping\GeneratedValue'))
+            ->addFullyQualifiedName(new FullyQualifiedName('Doctrine\ORM\Mapping\Id'))
+            ->addFullyQualifiedName(new FullyQualifiedName('Doctrine\ORM\Mapping\Table'))
+            ->setStructure($object)
+        ;
+
+        $prettyPrinter = Build::prettyPrinter();
+
+        return $prettyPrinter->generateCode($newEntity);
+    }
+
+    /**
+     * @param $entity
+     * @param null $table
+     *
+     * @return string
+     */
+    private function _getEntityHeadBlockCode($entity, $table = null)
+    {
+        $headBlock = 'Mamba\Entity\\'.$entity;
+        $headBlock .= "\n";
+        if ($table) {
+            $headBlock .= '@Table(name='.$table.')';
+            $headBlock .= "\n";
+        }
+        $headBlock .= '@Entity(repositoryClass=Mamba\Repository\\'.$entity.'Repository)';
+
+        return $headBlock;
+    }
+
+    /**
+     * @return string
+     */
+    public function _getEntityIdHeadBlockCode()
+    {
+        $idCode = '@Column(name=id, type=integer, nullable=false)';
+        $idCode .= "\n";
+        $idCode .= '@Id';
+        $idCode .= "\n";
+        $idCode .= '@GeneratedValue(strategy=IDENTITY)';
+
+        return $idCode;
+    }
+
+
+    /**
+     * @param $file
+     * @param $entity
+     * @return string
+     */
+    private function _generateRepo($file, $entity)
+    {
+        $newRepository = File::make($file)
+            ->addFullyQualifiedName(FullyQualifiedName::make('Doctrine\ORM\EntityRepository'))
+            ->setStructure(
+                Object::make('Mamba\Repository\\'.$entity.'Controller')
+                    ->extend(Object::make('Doctrine\ORM\EntityRepository'))
+                    ->addMethod(
+                        Method::make('dummyMethod')
+                            ->setPhpdoc(MethodPhpdoc::make()
+                                ->setDescription(Description::make('Your awesome code here'))
+                            )
+                            ->setBody("\t\t".'// your awesome code here.')
+                    )
+            )
+        ;
+
+        $prettyPrinter = Build::prettyPrinter();
+
+        return $prettyPrinter->generateCode($newRepository);
     }
 }
