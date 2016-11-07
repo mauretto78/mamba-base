@@ -12,6 +12,7 @@
 namespace Mamba\Command;
 
 use Mamba\Base\BaseCommand;
+use Mamba\Lib\Stringy as S;
 use Memio\Model\Argument;
 use Memio\Memio\Config\Build;
 use Memio\Model\File;
@@ -29,7 +30,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\ChoiceQuestion;
-use Stringy\Stringy as S;
 
 class EntityCreateCommand extends BaseCommand
 {
@@ -152,11 +152,11 @@ class EntityCreateCommand extends BaseCommand
         // Create Entity and Repository
         if ($newEntity = fopen($file, 'w') and $newRepo = fopen($repo, 'w')) {
             $code = $this->_generateEntity($file, $entity, $table, $fields);
-            fwrite($newEntity, $code);
+            fwrite($newEntity, S::create($code)->deepHtmlDecode());
             fclose($newEntity);
 
             $code = $this->_generateRepo($repo, $entity);
-            fwrite($newRepo, $code);
+            fwrite($newRepo, S::create($code)->deepHtmlDecode());
             fclose($newRepo);
 
             return 1;
@@ -194,7 +194,7 @@ class EntityCreateCommand extends BaseCommand
             $object->addProperty(
                 Property::make($underscoredKey)
                     ->setPhpdoc(PropertyPhpdoc::make()
-                        ->setVariableTag(VariableTag::make('$'.$underscoredKey."\n".'@Column(name='.$underscoredKey.', type='.$value['type'].', nullable='.$value['nullable'].')')
+                        ->setVariableTag(VariableTag::make('$'.$underscoredKey."\n".'@Column(name="'.$underscoredKey.'", type="'.$value['type'].'", nullable="'.$value['nullable'].'")')
                         )
                     )
             );
@@ -242,10 +242,10 @@ class EntityCreateCommand extends BaseCommand
         $headBlock = 'Mamba\Entity\\'.$entity;
         $headBlock .= "\n";
         if ($table) {
-            $headBlock .= '@Table(name='.$table.')';
+            $headBlock .= '@Table(name="'.$table.'")';
             $headBlock .= "\n";
         }
-        $headBlock .= '@Entity(repositoryClass=Mamba\Repository\\'.$entity.'Repository)';
+        $headBlock .= '@Entity(repositoryClass="Mamba\Repository\\'.$entity.'Repository")';
 
         return $headBlock;
     }
@@ -255,11 +255,11 @@ class EntityCreateCommand extends BaseCommand
      */
     public function _getEntityIdHeadBlockCode()
     {
-        $idCode = '@Column(name=id, type=integer, nullable=false)';
+        $idCode = '@Column(name="id", type="integer", nullable="false")';
         $idCode .= "\n";
         $idCode .= '@Id';
         $idCode .= "\n";
-        $idCode .= '@GeneratedValue(strategy=IDENTITY)';
+        $idCode .= '@GeneratedValue(strategy="IDENTITY")';
 
         return $idCode;
     }

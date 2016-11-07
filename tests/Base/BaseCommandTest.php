@@ -4,6 +4,7 @@ namespace Mamba\Base\Tests;
 
 use Mamba\Base\BaseCommand;
 use Mamba\Tests\MambaTest;
+use Mamba\Lib\Stringy as S;
 
 class BaseCommandTest extends MambaTest
 {

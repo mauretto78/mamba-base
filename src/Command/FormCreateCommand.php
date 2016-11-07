@@ -12,7 +12,7 @@
 namespace Mamba\Command;
 
 use Mamba\Base\BaseCommand;
-use Memio\Model\Argument;
+use Mamba\Lib\Stringy as S;
 use Memio\Memio\Config\Build;
 use Memio\Model\File;
 use Memio\Model\FullyQualifiedName;
@@ -26,7 +26,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\ChoiceQuestion;
-use Stringy\Stringy as S;
 
 class FormCreateCommand extends BaseCommand
 {
@@ -126,8 +125,8 @@ class FormCreateCommand extends BaseCommand
 
         // Create Form
         if ($newForm = fopen($file, 'w')) {
-            $txt = $this->_getFormCode($file, $form, $fields);
-            fwrite($newForm, $txt);
+            $code = $this->_getFormCode($file, $form, $fields);
+            fwrite($newForm, S::create($code)->deepHtmlDecode());
             fclose($newForm);
 
             return 1;

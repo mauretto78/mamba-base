@@ -2,13 +2,19 @@
 
 namespace Mamba\Services;
 
-use gossi\codegen\generator\CodeGenerator;
-use gossi\codegen\model\PhpClass;
-use gossi\codegen\model\PhpMethod;
-use gossi\codegen\model\PhpParameter;
-use Mamba\Base\BaseApplication as Application;
 use Doctrine\ORM\EntityManager;
-use Stringy\Stringy as S;
+use Mamba\Base\BaseApplication as Application;
+use Mamba\Lib\Stringy as S;
+use Memio\Model\Argument;
+use Memio\Memio\Config\Build;
+use Memio\Model\File;
+use Memio\Model\FullyQualifiedName;
+use Memio\Model\Method;
+use Memio\Model\Object;
+use Memio\Model\Phpdoc\Description;
+use Memio\Model\Phpdoc\MethodPhpdoc;
+use Memio\Model\Phpdoc\ParameterTag;
+use Memio\Model\Phpdoc\ReturnTag;
 use Symfony\Component\Yaml\Yaml;
 
 class ApiCreatorService
@@ -152,8 +158,6 @@ class ApiCreatorService
             throw new \RuntimeException('Directory '.$yamlDir.' could not be created');
         }
 
-        //$routingFile = $this->app->getConfigDir().'/routing.yml';
-
         if ($newYamlFile = fopen($yamlFile, 'w')) {
             fwrite($newYamlFile, $yaml);
             fclose($newYamlFile);
@@ -179,57 +183,95 @@ class ApiCreatorService
 
         // Create Controller
         if ($newController = fopen($file, 'w')) {
-            $class = new PhpClass();
-            $class
-                ->setName($controller.' extends BaseController')
-                ->setNamespace('Mamba\\Controller')
-                ->setDescription($controller.' Class')
-                ->setMethod(PhpMethod::create('listAction')
-                    ->addParameter(PhpParameter::create('request'))
-                    ->setDescription('listAction')
-                    ->setType('JsonResponse')
-                    ->setBody('return new JsonResponse(\'dummy response\');')
-                )
-                ->setMethod(PhpMethod::create('showAction')
-                    ->addParameter(PhpParameter::create('request'))
-                    ->setDescription('showAction')
-                    ->setType('JsonResponse')
-                    ->setBody('return new JsonResponse(\'dummy response\');')
-                )
-                ->setMethod(PhpMethod::create('createAction')
-                    ->addParameter(PhpParameter::create('request'))
-                    ->setDescription('createAction')
-                    ->setType('JsonResponse')
-                    ->setBody('return new JsonResponse(\'dummy response\');')
-                )
-                ->setMethod(PhpMethod::create('updateAction')
-                    ->addParameter(PhpParameter::create('request'))
-                    ->setDescription('updateAction')
-                    ->setType('JsonResponse')
-                    ->setBody('return new JsonResponse(\'dummy response\');')
-                )
-                ->setMethod(PhpMethod::create('deleteAction')
-                    ->addParameter(PhpParameter::create('request'))
-                    ->setDescription('deleteAction')
-                    ->setType('JsonResponse')
-                    ->setBody('return new JsonResponse(\'dummy response\');')
-                )
-                ->addUseStatement('Mamba\\Base\\BaseController')
-                ->addUseStatement('Symfony\\Component\\HttpFoundation\\JsonResponse')
-                ->addUseStatement('Symfony\\Component\\HttpFoundation\\Request')
-            ;
-            $generator = new CodeGenerator();
-
-            $code = '<?php';
-            $code .= "\n\n";
-            $code .= $generator->generate($class);
-
-            fwrite($newController, $code);
+            $code = $this->_generateController($file, $controller);
+            fwrite($newController, S::create($code)->deepHtmlDecode());
             fclose($newController);
 
             return 1;
         }
 
         return 0;
+    }
+
+    /**
+     * @param $file
+     * @param $controller
+     * @return string
+     */
+    private function _generateController($file, $controller)
+    {
+        $newController = File::make($file)
+            ->addFullyQualifiedName(FullyQualifiedName::make('Mamba\Base\BaseController'))
+            ->addFullyQualifiedName(FullyQualifiedName::make('Symfony\Component\HttpFoundation\Request'))
+            ->addFullyQualifiedName(FullyQualifiedName::make('Symfony\Component\HttpFoundation\JsonResponse'))
+            ->setStructure(
+                Object::make('Mamba\Controller\\'.$controller.'Controller')
+                    ->extend(Object::make('Mamba\Base\BaseController'))
+                    ->addMethod(
+                        Method::make('listAction')
+                            ->setPhpdoc(MethodPhpdoc::make()
+                                ->setDescription(Description::make('showAction'))
+                                ->addParameterTag(new ParameterTag('Request', 'request'))
+                                ->setReturnTag(new ReturnTag('JsonResponse'))
+                            )
+                            ->addArgument(new Argument('Request', 'request'))
+                            ->setBody("\t\t".'return new Response(\'dummy response\');')
+                    )
+                    ->addMethod(
+                        Method::make('showAction')
+                            ->setPhpdoc(MethodPhpdoc::make()
+                                ->setDescription(Description::make('showAction'))
+                                ->addParameterTag(new ParameterTag('Request', 'request'))
+                                ->setReturnTag(new ReturnTag('JsonResponse'))
+                            )
+                            ->addArgument(new Argument('Request', 'request'))
+                            ->setBody("\t\t".'return new Response(\'dummy response\');')
+                    )
+                    ->addMethod(
+                        Method::make('createAction')
+                            ->setPhpdoc(MethodPhpdoc::make()
+                                ->setDescription(Description::make('createAction'))
+                                ->addParameterTag(new ParameterTag('Request', 'request'))
+                                ->setReturnTag(new ReturnTag('JsonResponse'))
+                            )
+                            ->addArgument(new Argument('Request', 'request'))
+                            ->setBody("\t\t".'return new Response(\'dummy response\');')
+                    )
+                    ->addMethod(
+                        Method::make('showAction')
+                            ->setPhpdoc(MethodPhpdoc::make()
+                                ->setDescription(Description::make('showAction'))
+                                ->addParameterTag(new ParameterTag('Request', 'request'))
+                                ->setReturnTag(new ReturnTag('JsonResponse'))
+                            )
+                            ->addArgument(new Argument('Request', 'request'))
+                            ->setBody("\t\t".'return new Response(\'dummy response\');')
+                    )
+                    ->addMethod(
+                        Method::make('updateAction')
+                            ->setPhpdoc(MethodPhpdoc::make()
+                                ->setDescription(Description::make('updateAction'))
+                                ->addParameterTag(new ParameterTag('Request', 'request'))
+                                ->setReturnTag(new ReturnTag('JsonResponse'))
+                            )
+                            ->addArgument(new Argument('Request', 'request'))
+                            ->setBody("\t\t".'return new Response(\'dummy response\');')
+                    )
+                    ->addMethod(
+                        Method::make('deleteAction')
+                            ->setPhpdoc(MethodPhpdoc::make()
+                                ->setDescription(Description::make('deleteAction'))
+                                ->addParameterTag(new ParameterTag('Request', 'request'))
+                                ->setReturnTag(new ReturnTag('JsonResponse'))
+                            )
+                            ->addArgument(new Argument('Request', 'request'))
+                            ->setBody("\t\t".'return new Response(\'dummy response\');')
+                    )
+            )
+        ;
+
+        $prettyPrinter = Build::prettyPrinter();
+
+        return $prettyPrinter->generateCode($newController);
     }
 }

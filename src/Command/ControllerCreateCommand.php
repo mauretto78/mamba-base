@@ -11,6 +11,7 @@
 
 namespace Mamba\Command;
 
+use Mamba\Lib\Stringy as S;
 use Memio\Model\Argument;
 use Memio\Memio\Config\Build;
 use Memio\Model\File;
@@ -24,7 +25,6 @@ use Memio\Model\Phpdoc\ReturnTag;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
-use Stringy\Stringy as S;
 
 class ControllerCreateCommand extends BaseCommand
 {
@@ -96,7 +96,7 @@ class ControllerCreateCommand extends BaseCommand
         // Create Controller
         if ($newController = fopen($file, 'w')) {
             $code = $this->_generateController($file, $controller);
-            fwrite($newController, $code);
+            fwrite($newController, S::create($code)->deepHtmlDecode());
             fclose($newController);
 
             return 1;
