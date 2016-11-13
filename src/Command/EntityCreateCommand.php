@@ -194,7 +194,7 @@ class EntityCreateCommand extends BaseCommand
             $object->addProperty(
                 Property::make($underscoredKey)
                     ->setPhpdoc(PropertyPhpdoc::make()
-                        ->setVariableTag(VariableTag::make('$'.$underscoredKey."\n".'@Column(name="'.$underscoredKey.'", type="'.$value['type'].'", nullable="'.$value['nullable'].'")')
+                        ->setVariableTag(VariableTag::make('$'.$underscoredKey."\n".'@Column(name="'.$underscoredKey.'", type="'.$value['type'].'", nullable='.$value['nullable'].')')
                         )
                     )
             );
@@ -255,7 +255,7 @@ class EntityCreateCommand extends BaseCommand
      */
     public function _getEntityIdHeadBlockCode()
     {
-        $idCode = '@Column(name="id", type="integer", nullable="false")';
+        $idCode = '@Column(name="id", type="integer", nullable=false)';
         $idCode .= "\n";
         $idCode .= '@Id';
         $idCode .= "\n";

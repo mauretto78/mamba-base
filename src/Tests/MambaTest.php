@@ -70,7 +70,7 @@ class MambaTest extends \PHPUnit_Framework_TestCase
                     'host' => 'localhost',
                     'dbname' => 'mamba_test',
                     'user' => 'root',
-                    'password' => '',
+                    'password' => 'root',
                     'charset' => 'utf8mb4',
                 ],
             ]

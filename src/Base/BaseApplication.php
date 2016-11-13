@@ -282,7 +282,7 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
      */
     public function getControllerNamespace()
     {
-        return '\Mamba\Controller\\';
+        return 'Mamba\Controller\\';
     }
 
     /**
@@ -304,7 +304,7 @@ class BaseApplication extends Application implements BaseApplicationInterface, C
      */
     public function getEntityNamespace()
     {
-        return '\Mamba\Entity\\';
+        return 'Mamba\Entity\\';
     }
 
     /**

@@ -103,7 +103,7 @@ class ApiCreatorService
      */
     public function create()
     {
-        if ($this->_createRoutes() and $this->_createController()) {
+        if ($this->_createRoutes() and $this->_createController() and $this->_createForm()) {
             return true;
         }
 
@@ -194,6 +194,31 @@ class ApiCreatorService
     }
 
     /**
+     * @return int
+     */
+    private function _createForm()
+    {
+        $entity = $this->getEntity();
+        $file = $this->app->getFormDir() . '/' . $entity . '.php';
+
+        // Duplicate file
+        if (file_exists($file)) {
+            return 2;
+        }
+
+        // Create Form
+        if ($newForm = fopen($file, 'w')) {
+            $code = $this->_generateForm($file, $entity);
+            fwrite($newForm, $code);
+            fclose($newForm);
+
+            return 1;
+        }
+
+        return 0;
+    }
+
+    /**
      * @param $file
      * @param $controller
      * @return string
@@ -273,5 +298,17 @@ class ApiCreatorService
         $prettyPrinter = Build::prettyPrinter();
 
         return $prettyPrinter->generateCode($newController);
+    }
+
+    /**
+     * @param $file
+     * @param $entity
+     * @return string
+     */
+    private function _generateForm($file, $entity)
+    {
+        $fields = $this->em->getClassMetadata($this->app->getEntityNamespace().$entity)->getFieldNames();
+
+        var_dump($fields);die();
     }
 }
