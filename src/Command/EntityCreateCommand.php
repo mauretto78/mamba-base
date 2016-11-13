@@ -175,6 +175,7 @@ class EntityCreateCommand extends BaseCommand
      */
     private function _generateEntity($file, $entity, $table = null, $fields = null)
     {
+
         $object = Object::make('Mamba\Entity\\'.$entity);
         $object->setPhpdoc(StructurePhpdoc::make()
             ->setDescription(Description::make($this->_getEntityHeadBlockCode($entity, $table)))
@@ -186,6 +187,7 @@ class EntityCreateCommand extends BaseCommand
             )
             ->makePrivate()
         );
+
         foreach ($fields as $key => $value) {
             $underscoredKey = S::create($key)->underscored()->toAscii();
             $camelizedKey = S::create($key)->camelize()->toAscii();
