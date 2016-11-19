@@ -1,0 +1,25 @@
+site:
+  version: ~
+
+assets:
+  base: '//localhost/mamba/web/assets'
+
+database:
+  driver: pdo_mysql
+  host: localhost
+  dbname: mamba
+  user: root
+  password: ~
+  charset: utf8mb4
+
+swiftmailer:
+  host: smtp
+  port: 25
+  username: user
+  password: pass
+  encryption: ~
+  auth_mode: ~
+
+monolog:
+  email.to: 'your-mail@mailserver.me'
+  email.from: 'server@localhost'

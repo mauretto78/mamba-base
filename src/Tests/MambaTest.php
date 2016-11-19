@@ -42,6 +42,7 @@ class MambaTest extends \PHPUnit_Framework_TestCase
         $this->app->setConfigFiles(
             [
                 'dummy.yml',
+                'parameters.yml',
                 'routing.yml',
             ]
         );
@@ -62,16 +63,16 @@ class MambaTest extends \PHPUnit_Framework_TestCase
                 'config.configFiles' => $this->app->getConfigFiles(),
             ]
         );
-
+        
         $this->app->register(new DoctrineServiceProvider(),
             [
                 'db.options' => [
-                    'driver' => 'pdo_mysql',
-                    'host' => 'localhost',
-                    'dbname' => 'mamba_test',
-                    'user' => 'root',
-                    'password' => 'root',
-                    'charset' => 'utf8mb4',
+                    'driver' => $this->app['config']['database']['driver'],
+                    'host' => $this->app['config']['database']['host'],
+                    'dbname' => $this->app['config']['database']['dbname'],
+                    'user' => $this->app['config']['database']['user'],
+                    'password' => $this->app['config']['database']['password'],
+                    'charset' => $this->app['config']['database']['charset'],
                 ],
             ]
         );

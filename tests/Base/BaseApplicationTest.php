@@ -4,6 +4,7 @@ namespace Mamba\Base\Tests;
 
 use GuzzleHttp\Client;
 use Mamba\Base\BaseCommand;
+use Mamba\Providers\ApiCreatorServiceProvider;
 use Mamba\Providers\ClientServiceProvider;
 use Mamba\Providers\ConfigServiceProvider;
 use Mamba\Tests\MambaTest;
@@ -82,7 +83,7 @@ class BaseApplicationTest extends MambaTest
     public function testInitProviders()
     {
         $a = [
-            ConfigServiceProvider::class => [],
+            ApiCreatorServiceProvider::class => [],
         ];
 
         $b = [
@@ -97,7 +98,7 @@ class BaseApplicationTest extends MambaTest
         $this->assertCount(1, $providers);
         $this->assertCount(1, $devProviders);
 
-        $this->assertInstanceOf('Mamba\Providers\ConfigServiceProvider', $providers[0]);
+        $this->assertInstanceOf('Mamba\Providers\ApiCreatorServiceProvider', $providers[0]);
         $this->assertInstanceOf('Mamba\Providers\ClientServiceProvider', $devProviders[0]);
     }
 

@@ -1,5 +1,6 @@
 /config
 phpunit.xml
+/tests/config/parameters.yml
 /tmp
 /var
 /vendor
