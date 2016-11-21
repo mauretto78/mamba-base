@@ -11,6 +11,8 @@ use Mamba\Providers\ClientServiceProvider;
 use Knp\Command\Command;
 use Knp\Provider\ConsoleServiceProvider;
 use Silex\Provider\DoctrineServiceProvider;
+use Silex\Provider\HttpCacheServiceProvider;
+use Silex\Provider\HttpFragmentServiceProvider;
 use Silex\Provider\TwigServiceProvider;
 
 class MambaTest extends \PHPUnit_Framework_TestCase
@@ -96,6 +98,12 @@ class MambaTest extends \PHPUnit_Framework_TestCase
         $this->app->register(new \Mamba\Providers\MigrationServiceProvider(), array(
             'db.migrations.path' => __DIR__ . '/../Database/migrations',
         ));
+
+        $this->app->register(new HttpFragmentServiceProvider());
+
+        $this->app->register(new HttpCacheServiceProvider(), [
+            'http_cache.cache_dir' => $this->app->getCacheDir().'/http',
+        ]);
 
         $this->app->register(new TwigServiceProvider(), [
             'twig.path' => __DIR__.'/../Resources/views/',
